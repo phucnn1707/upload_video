@@ -1,5 +1,5 @@
-import express from 'express';
-import { handleCreateUser, handleHelloWorld, handleUserPage } from '../controllers/homeController';
+const express = require('express');
+const { handleCreateUser, handleHelloWorld, handleUserPage } = require('../controllers/homeController');
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ const initWebRoutes = (app) => {
   return app.use('/', router);
 };
 
-export default initWebRoutes;
+module.exports = initWebRoutes;

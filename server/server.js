@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const { connectDB } = require('./src/config/db.config');
-// const { default: initWebRoutes } = require('./src/routes/web');
+const initWebRoutes = require('./src/routes/web');  // Changed to require
 
 // Load environment variables from .env file
 dotenv.config();
@@ -18,10 +18,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Database connection
-// connectDB();
+connectDB();
 
-//init web routes
-// initWebRoutes(app);
+// Initialize web routes
+initWebRoutes(app);
 
 // Basic route
 app.get('/', (req, res) => {
