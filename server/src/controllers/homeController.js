@@ -1,13 +1,13 @@
 const { createNewUser } = require('../services/userService');
 
 const handleHelloWorld = (req, res) => {
-  return res.render('home.ejs');
+  return;
 };
 
 const handleUserPage = (req, res) => {
   //model => get data form database
 
-  return res.render('user.ejs');
+  // return res.render('user.ejs');
 };
 
 const handleCreateUser = (req, res) => {
