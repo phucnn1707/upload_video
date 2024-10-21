@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const { connectDB } = require('./src/config/db.config');
-const initWebRoutes = require('./src/routes/web');  // Changed to require
+const initWebRoutes = require('./src/routes/web');
 
 // Load environment variables from .env file
 dotenv.config();

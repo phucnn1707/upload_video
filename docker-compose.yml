@@ -1,4 +1,15 @@
 services:
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    env_file:
+      - ./server/.env
+    restart: always
+    ports:
+      - '33061:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+
   server:
     build: ./server
     container_name: backend
@@ -24,17 +35,6 @@ services:
       - /app/node_modules
     depends_on:
       - server
-
-  db:
-    image: mysql:5.7
-    container_name: mysql
-    env_file:
-      - ./server/.env
-    restart: always
-    ports:
-      - '33061:3306'
-    volumes:
-      - db_data:/var/lib/mysql
 
 volumes:
   db_data:

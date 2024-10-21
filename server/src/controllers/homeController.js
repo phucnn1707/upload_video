@@ -6,7 +6,6 @@ const handleHelloWorld = (req, res) => {
 
 const handleUserPage = (req, res) => {
   //model => get data form database
-
   // return res.render('user.ejs');
 };
 

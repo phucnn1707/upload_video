@@ -12,11 +12,6 @@ build/
 # Logs
 *.log
 
-# Environment files
-client/.env
-server/.env
-.env
-
 # Ignore public directory (assets)
 client/public/
 
@@ -24,18 +19,6 @@ client/public/
 client/package-lock.json
 server/package-lock.json
 package-lock.json
-
-# Minified files
-*.min.js
-*.min.css
-
-# Static HTML files
-client/index.html
-
-# Configuration files (don't format these)
-client/vite.config.js
-client/eslint.config.js
-server/server.js
 
 # Ignore specific generated files (if any)
 client/src/generated/**
