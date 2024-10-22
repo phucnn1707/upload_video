@@ -35,6 +35,7 @@ services:
       - /app/node_modules
     depends_on:
       - server
+    command: npm run dev
 
 volumes:
   db_data:
