@@ -1777,7 +1777,7 @@ button.button.btn-tiktok::after,
 a.button.btn-tiktok::after {
   position: absolute;
   content: '';
-  background: url(../assets/images/ico-tiktok.png) no-repeat left center;
+  background: url(./assets/images/ico-tiktok.png) no-repeat left center;
   background-size: 30px;
   width: 30px;
   height: 30px;
@@ -1814,7 +1814,7 @@ button.button.btn-youtube::after,
 a.button.btn-youtube::after {
   position: absolute;
   content: '';
-  background: url(../assets/images/ico-youtube.png) no-repeat left center;
+  background: url(./assets/images/ico-youtube.png) no-repeat left center;
   background-size: 40px;
   width: 40px;
   height: 40px;
@@ -2019,7 +2019,7 @@ a.button.btn-youtube::after {
 .menu .logout a {
   padding: 0;
   height: auto;
-  background: url(../assets/images/ico-logout.svg) no-repeat right;
+  background: url(./assets/images/ico-logout.svg) no-repeat right;
 }
 
 .menu.toggle {
@@ -2191,7 +2191,7 @@ a.button.btn-youtube::after {
 
 .blockHead .filfer input.input-date {
   width: 220px;
-  background: url(../assets/images/ico-cal.svg) no-repeat right 20px center;
+  background: url(./assets/images/ico-cal.svg) no-repeat right 20px center;
 }
 
 @media all and (max-width: 1200px) {
@@ -2207,7 +2207,7 @@ a.button.btn-youtube::after {
 }
 
 .blockHead .filfer input.input-search {
-  background: url(../assets/images/ico-search.svg) no-repeat right 20px center;
+  background: url(./assets/images/ico-search.svg) no-repeat right 20px center;
   margin-right: 25px;
   width: 320px;
 }
@@ -2249,7 +2249,7 @@ a.button.btn-youtube::after {
 }
 
 .btn-download {
-  background: #fff url(../assets/images/ico-download.svg) no-repeat left 20px center;
+  background: #fff url(./assets/images/ico-download.svg) no-repeat left 20px center;
   background-size: 16px;
   padding-left: 20px;
   width: 180px;
@@ -2327,7 +2327,7 @@ a.button.btn-youtube::after {
 
 .blockAccInfo .acc-change {
   font-weight: 600;
-  background: url(../assets/images/ico-change.svg) no-repeat left center;
+  background: url(./assets/images/ico-change.svg) no-repeat left center;
   background-size: 16px;
   padding-left: 25px;
 }
@@ -2513,7 +2513,7 @@ a.button.btn-youtube::after {
 .blockAiDesc .btn-edit {
   font-size: 20px;
   font-weight: 600;
-  background: url(../assets/images/ico-edit.svg) no-repeat left center;
+  background: url(./assets/images/ico-edit.svg) no-repeat left center;
   background-size: 22px;
   padding-left: 35px;
   margin-right: 45px;
@@ -2551,7 +2551,7 @@ a.button.btn-youtube::after {
 .blockAiDesc .btn-generate::after {
   position: absolute;
   content: '';
-  background: url(../assets/images/ico-star.png) no-repeat left center;
+  background: url(./assets/images/ico-star.png) no-repeat left center;
   background-size: 30px;
   width: 30px;
   height: 30px;
@@ -2891,7 +2891,7 @@ a.button.btn-youtube::after {
 .modal .modal-footer button.btn-generate::after {
   position: absolute;
   content: '';
-  background: url(../assets/images/ico-star.png) no-repeat left center;
+  background: url(./assets/images/ico-star.png) no-repeat left center;
   background-size: 30px;
   width: 30px;
   height: 30px;
