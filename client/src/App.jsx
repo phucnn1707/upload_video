@@ -1,27 +1,33 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navigation from './components/Navigation/Navigation';
 import Login from './pages/Login';
 import SNS from './pages/SNS';
+import Create from './pages/Create';
+import MainLayout from './layouts/main/Main';
 
-function NotFound() {
+const NotFound = () => {
   return <h1>404 Not Found</h1>;
-}
+};
 
-function App() {
+const App = () => {
   return (
     <Router>
       <div className="app-container">
-        {/* <Navigation /> */}
-
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/sns" element={<SNS />} />
-          <Route path="*" element={<NotFound />} />
+          <Route element={<MainLayout />}>
+            <Route path="/create" element={<Create />} />
+            <Route path="/create-view" />
+            <Route path="/video" />
+            <Route path="/video-detail" />
+            <Route path="/account" />
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Routes>
       </div>
     </Router>
   );
-}
+};
 
 export default App;
