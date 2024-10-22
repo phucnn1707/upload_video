@@ -30,12 +30,14 @@ services:
       - '5173:5173'
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - FAST_REFRESH=false
     volumes:
       - ./client:/app
       - /app/node_modules
     depends_on:
       - server
-    command: npm run dev
 
 volumes:
   db_data:
