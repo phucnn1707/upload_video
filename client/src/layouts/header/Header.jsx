@@ -1,4 +1,5 @@
 import React from 'react';
+import userIcon from '../../assets/images/ico-user.svg';
 
 const Header = () => {
   return (
@@ -18,7 +19,7 @@ const Header = () => {
           <div className="user">
             <span className="name">name</span>
             <span className="ico">
-              <img src="../../assets/images/ico-user.svg" alt="user-icon" />
+              <img src={userIcon} />
             </span>
           </div>
         </div>

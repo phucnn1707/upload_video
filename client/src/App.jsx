@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import SNS from './pages/SNS';
 import Create from './pages/Create';
 import MainLayout from './layouts/main/Main';
+import Video from './pages/Video';
+import Account from './pages/Account';
 
 const NotFound = () => {
   return <h1>404 Not Found</h1>;
@@ -19,9 +21,9 @@ const App = () => {
           <Route element={<MainLayout />}>
             <Route path="/create" element={<Create />} />
             <Route path="/create-view" />
-            <Route path="/video" />
+            <Route path="/video" element={<Video />} />
             <Route path="/video-detail" />
-            <Route path="/account" />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

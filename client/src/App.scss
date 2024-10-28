@@ -2157,7 +2157,7 @@ a.button.btn-youtube::after {
   }
 }
 
-.blockHead .filfer {
+.blockHead .filter {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -2176,12 +2176,12 @@ a.button.btn-youtube::after {
 }
 
 @media all and (max-width: 960px) {
-  .blockHead .filfer {
+  .blockHead .filter {
     display: none;
   }
 }
 
-.blockHead .filfer input {
+.blockHead .filter input {
   border: 1px solid #fff;
   border-radius: 100px;
   height: 40px;
@@ -2189,61 +2189,61 @@ a.button.btn-youtube::after {
   padding: 10px 20px;
 }
 
-.blockHead .filfer input.input-date {
+.blockHead .filter input.input-date {
   width: 220px;
   background: url(./assets/images/ico-cal.svg) no-repeat right 20px center;
 }
 
 @media all and (max-width: 1200px) {
-  .blockHead .filfer input.input-date {
+  .blockHead .filter input.input-date {
     width: 180px;
   }
 }
 
 @media all and (max-width: 1040px) {
-  .blockHead .filfer input.input-date {
+  .blockHead .filter input.input-date {
     width: 160px;
   }
 }
 
-.blockHead .filfer input.input-search {
+.blockHead .filter input.input-search {
   background: url(./assets/images/ico-search.svg) no-repeat right 20px center;
   margin-right: 25px;
   width: 320px;
 }
 
 @media all and (max-width: 1400px) {
-  .blockHead .filfer input.input-search {
+  .blockHead .filter input.input-search {
     width: 220px;
     margin-right: 20px;
   }
 }
 
 @media all and (max-width: 1200px) {
-  .blockHead .filfer input.input-search {
+  .blockHead .filter input.input-search {
     width: 180px;
   }
 }
 
 @media all and (max-width: 1040px) {
-  .blockHead .filfer input.input-search {
+  .blockHead .filter input.input-search {
     width: 160px;
   }
 }
 
-.blockHead .filfer span {
+.blockHead .filter span {
   display: inline-block;
   margin: 0 20px;
 }
 
 @media all and (max-width: 1400px) {
-  .blockHead .filfer span {
+  .blockHead .filter span {
     margin: 0 15px;
   }
 }
 
 @media all and (max-width: 1200px) {
-  .blockHead .filfer span {
+  .blockHead .filter span {
     margin: 0 10px;
   }
 }
