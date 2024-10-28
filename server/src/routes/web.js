@@ -1,5 +1,5 @@
-import express from 'express';
-import { handleCreateUser, handleHelloWorld, handleUserPage } from '../controllers/homeController';
+const express = require('express');
+const { handleCreateUser } = require('../controllers/homeController');
 
 const router = express.Router();
 
@@ -8,8 +8,6 @@ const router = express.Router();
  * @param {*} app - express app
  */
 const initWebRoutes = (app) => {
-  router.get('/', handleHelloWorld);
-  router.get('/users', handleUserPage);
   router.post('/users/create-user', handleCreateUser);
   router.get('/', (req, res) => {
     return res.send('Hello, world!');
@@ -18,4 +16,4 @@ const initWebRoutes = (app) => {
   return app.use('/', router);
 };
 
-export default initWebRoutes;
+module.exports = initWebRoutes;

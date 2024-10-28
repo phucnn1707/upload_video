@@ -1,13 +1,7 @@
 const { createNewUser } = require('../services/userService');
 
 const handleHelloWorld = (req, res) => {
-  return res.render('home.ejs');
-};
-
-const handleUserPage = (req, res) => {
-  //model => get data form database
-
-  return res.render('user.ejs');
+  return;
 };
 
 const handleCreateUser = (req, res) => {
@@ -20,4 +14,4 @@ const handleCreateUser = (req, res) => {
   return res.send('Sucessfully created');
 };
 
-module.exports = { handleUserPage, handleHelloWorld, handleCreateUser };
+module.exports = { handleHelloWorld, handleCreateUser };

@@ -1,28 +1,30 @@
-import bcrypt from 'bcrypt';
-import db from '../models';
+const bcrypt = require('bcrypt');
+const db = require('../models');
 
-// const salt = bcrypt.genSaltSync(10); // Generate a salt with 10 rounds
+const salt = bcrypt.genSaltSync(10);
 
-// const hashUserPassword = (userPassword) => {
-//   let hashPassword = bcrypt.hashSync(userPassword, salt);
-//   return hashPassword;
-// };
+const hashUserPassword = (userPassword) => {
+  return bcrypt.hashSync(userPassword, salt);
+};
 
 const createNewUser = async (email, password, username) => {
-  // let hashPass = hashUserPassword(password);
   try {
     if (!db.User) {
       console.error('User model is not defined');
     } else {
+      const hashPass = hashUserPassword(password);
+
       await db.User.create({
         username: username,
         email: email,
-        password: password,
+        password: hashPass,
       });
+
+      console.log('User created successfully');
     }
   } catch (error) {
-    console.log(error);
+    console.error('Error creating user:', error);
   }
 };
 
-export { createNewUser };
+module.exports = { createNewUser };
