@@ -28,11 +28,6 @@ server/package-lock.json
 client/public/
 server/public/
 
-# Ignore coverage reports (if testing)
-coverage/
-client/coverage/
-server/coverage/
-
 # Ignore temporary files and caches
 .tmp/
 .cache/
