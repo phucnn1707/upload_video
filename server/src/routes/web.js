@@ -1,5 +1,10 @@
 const express = require('express');
-const { handleCreateUser } = require('../controllers/homeController');
+const {
+  handleCreateUser,
+  handleGetAllUsers,
+  handleUpdateUser,
+  handleDeleteUser,
+} = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -9,6 +14,13 @@ const router = express.Router();
  */
 const initWebRoutes = (app) => {
   router.post('/users/create-user', handleCreateUser);
+
+  router.get('/users', handleGetAllUsers);
+
+  router.put('/users/:id', handleUpdateUser);
+
+  router.delete('/users/:id', handleDeleteUser);
+
   router.get('/', (req, res) => {
     return res.send('Hello, world!');
   });

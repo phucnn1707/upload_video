@@ -27,4 +27,49 @@ const createNewUser = async (email, password, username) => {
   }
 };
 
-module.exports = { createNewUser };
+const getAllUsers = async () => {
+  try {
+    const users = await db.User.findAll({
+      attributes: ['id', 'email', 'username', 'createdAt', 'updatedAt'],
+    });
+    console.log('All Users:', users);
+    return users;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+
+const updateUser = async (userId, newEmail, newUsername, newPassword) => {
+  try {
+    const user = await db.User.findByPk(userId);
+    if (user) {
+      user.email = newEmail || user.email;
+      user.username = newUsername || user.username;
+      if (newPassword) {
+        user.password = hashUserPassword(newPassword);
+      }
+      await user.save();
+      console.log('User updated successfully');
+    } else {
+      console.log(`User with id ${userId} not found`);
+    }
+  } catch (error) {
+    console.error('Error updating user:', error);
+  }
+};
+
+const deleteUser = async (userId) => {
+  try {
+    const user = await db.User.findByPk(userId);
+    if (user) {
+      await user.destroy();
+      console.log('User deleted successfully');
+    } else {
+      console.log(`User with id ${userId} not found`);
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+  }
+};
+
+module.exports = { createNewUser, getAllUsers, updateUser, deleteUser };
