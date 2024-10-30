@@ -28,56 +28,41 @@ To set up the Node.js server, follow these steps:
 
 If your project includes a MySQL database and uses Sequelize, follow the steps below to set up the database:
 
-1. **Install Sequelize CLI**
-   Install Sequelize CLI globally by running:
-
-   ```bash
-   npm install -g sequelize-cli
-   ```
-
-2. **Initialize Sequelize**
-   In the project's root directory, run:
-
-   ```bash
-   npx sequelize init
-   ```
-
-   This command will create the `config`, `models`, `migrations`, and `seeders` directories.
-
-3. **Configure Database Connection**
+1. **Configure Database Connection**
    Update the `config/config.json` file with your database credentials. Ensure it matches the settings specified in your `.env` file.
 
-4. **Create the Database**
-   To create the MySQL database, run:
-
-   ```bash
-   npx sequelize db:create
-   ```
-
-5. **Generate a Model**
+2. **Generate a Model**
    To generate a `User` model with attributes `firstName`, `lastName`, and `email`, use:
 
    ```bash
    npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
    ```
 
-6. **Generate a Seeder**
+3. **Generate a Seeder**
    To generate a seeder file use:
 
    ```bash
    npx sequelize-cli seed:generate --name demo-user
    ```
 
-7. **Run Migrations**
+4. **Run Migrations**
    Apply all pending migrations by running:
 
    ```bash
-   npx sequelize db:migrate
+   npx sequelize-cli db:migrate
    ```
 
-8. **Run Seeders** (Optional)
+5. **Run Seeders** (Optional)
    If seed data is available, run:
 
    ```bash
-   npx sequelize db:seed:all
+   npx sequelize-cli db:seed:all
+   ```
+
+6. **Undo All Migrations and Seeders**
+   If seed data is available, run:
+
+   ```bash
+   npx sequelize-cli db:migrate:undo:all
+   npx sequelize-cli db:seed:undo:all
    ```

@@ -133,3 +133,20 @@ For more information on using Prettier:
 ### License
 
 This project is licensed under the [MIT License](LICENSE).
+
+### Add subtitle.srt and title to video with ffmpeg
+
+```bash
+ffmpeg -i 1730253292779.mp4 -vf "subtitles=1730253292779.srt:force_style='Fontsize=10,Alignment=2,MarginV=30',\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50:fontfile=NotoSansJP-VariableFont_wght.ttf,\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2+1:y=50:fontfile=NotoSansJP-VariableFont_wght.ttf,\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2-1:y=50:fontfile=NotoSansJP-VariableFont_wght.ttf,\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50+1:fontfile=NotoSansJP-VariableFont_wght.ttf,\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50-1:fontfile=NotoSansJP-VariableFont_wght.ttf,\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2+1:y=50+1:fontfile=NotoSansJP-VariableFont_wght.ttf,\
+drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:x=(w-text_w)/2-1:y=50-1:fontfile=NotoSansJP-VariableFont_wght.ttf" -c:a copy output_1730253292779.mp4
+```
+
+```bash
+ffmpeg -i 1730253292779.mp4 -vf "subtitles=1730253292779.srt:force_style='Fontsize=10,Alignment=2,MarginV=30',drawtext=text='北海道の美しい自然と豊かなグルメ':fontcolor=white:fontsize=30:borderw=2:bordercolor=black:x=(w-text_w)/2:y=50:fontfile=NotoSansJP-VariableFont_wght.ttf" -c:a copy output_1730253292779.mp4
+```
