@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BlockAi from './BlockAi';
+import EditModal from './EditModal';
 
 const BlockAiList = ({ blocks }) => {
-  const handleEditClick = (name) => {
-    console.log(`Edit button clicked for: ${name}`);
+  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleEditClick = (block) => {
+    setSelectedBlock(block);
+    setIsModalOpen(true);
   };
 
   const handleGenerateClick = (name) => {
     console.log(`Generate button clicked for: ${name}`);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedBlock(null);
   };
 
   return (
@@ -18,10 +28,11 @@ const BlockAiList = ({ blocks }) => {
           name={block.name}
           detail={block.detail}
           tags={block.tags}
-          onEditClick={() => handleEditClick(block.name)}
+          onEditClick={() => handleEditClick(block)}
           onGenerateClick={() => handleGenerateClick(block.name)}
         />
       ))}
+      {isModalOpen && selectedBlock && <EditModal block={selectedBlock} onClose={handleModalClose} />}
     </div>
   );
 };

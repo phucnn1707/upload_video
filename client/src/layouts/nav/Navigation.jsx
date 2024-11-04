@@ -1,13 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-function Navigation() {
+function Navigation({ isMenuActive }) {
   return (
     <>
-      <div className="menu">
+      <div className={`menu ${isMenuActive ? 'toggle' : ''}`}>
         <ul>
           <li>
-            <NavLink to="/create" classNamelassName="active">
+            <NavLink to="/create" activeClassName="active">
               ❖　動画生成
             </NavLink>
           </li>
