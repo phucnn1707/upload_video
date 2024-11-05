@@ -5,6 +5,7 @@ const {
   handleUpdateUser,
   handleDeleteUser,
 } = require('../controllers/userController');
+const { testApi } = require('../controllers/apiController');
 
 const router = express.Router();
 
@@ -20,6 +21,10 @@ const initWebRoutes = (app) => {
   router.put('/users/:id', handleUpdateUser);
 
   router.delete('/users/:id', handleDeleteUser);
+
+  //rest api
+  //GET, POST, PUT, DELETE
+  router.get('/api/test-api', testApi);
 
   router.get('/', (req, res) => {
     return res.send('Hello, world!');

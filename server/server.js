@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const { connectDB } = require('./src/config/connectDB');
 const initWebRoutes = require('./src/routes/web');
+const initApiRoutes = require('./src/routes/api');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -22,6 +23,9 @@ connectDB();
 
 // Initialize web routes
 initWebRoutes(app);
+
+// Initialize api routes
+initApiRoutes(app);
 
 // Basic route
 app.get('/', (req, res) => {

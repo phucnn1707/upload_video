@@ -7,12 +7,28 @@ const hashUserPassword = (userPassword) => {
   return bcrypt.hashSync(userPassword, salt);
 };
 
+const isUserExists = async (email, username) => {
+  const userByEmail = await db.User.findOne({ where: { email } });
+  if (userByEmail) return { exists: true, field: 'email' };
+
+  const userByUsername = await db.User.findOne({ where: { username } });
+  if (userByUsername) return { exists: true, field: 'username' };
+
+  return { exists: false };
+};
+
 const createNewUser = async (email, password, username) => {
   try {
     if (!db.User) {
       console.error('User model is not defined');
     } else {
       const hashPass = hashUserPassword(password);
+
+      const { exists, field } = await isUserExists(email, username);
+      if (exists) {
+        console.log(`The ${field} already exists`);
+        return;
+      }
 
       await db.User.create({
         username: username,

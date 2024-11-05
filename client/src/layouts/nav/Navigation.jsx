@@ -1,7 +1,15 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 function Navigation({ isMenuActive }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+
+    navigate('/login');
+  };
+
   return (
     <>
       <div className={`menu ${isMenuActive ? 'toggle' : ''}`}>
@@ -23,7 +31,7 @@ function Navigation({ isMenuActive }) {
           </li>
         </ul>
         <div className="logout">
-          <a href="#">ログアウト</a>
+          <button onClick={handleLogout}>ログアウト</button>
         </div>
       </div>
     </>
