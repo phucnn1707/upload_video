@@ -22,7 +22,7 @@ const login = async (email, password) => {
 
     // If user does not exist or password is invalid, return a generic error
     if (!user || !checkPassword(password, user.password_hash)) {
-      return { success: false, message: 'Email or password is incorrect' };
+      return { success: false, message: 'メールアドレスまたはパスワードが正しくありません' };
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
@@ -30,7 +30,7 @@ const login = async (email, password) => {
     // If login is successful, return a success response
     return {
       success: true,
-      message: 'Login successful',
+      message: 'ログインに成功しました',
       token: token,
       user: {
         id: user.id,
@@ -40,7 +40,7 @@ const login = async (email, password) => {
     };
   } catch (error) {
     console.error('Error during login:', error);
-    return { success: false, message: 'An error occurred during login' };
+    return { success: false, message: 'ログイン中にエラーが発生しました' };
   }
 };
 
