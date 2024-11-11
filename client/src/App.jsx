@@ -9,6 +9,7 @@ import Account from './pages/Account';
 import CreateView from './pages/CreateView';
 import VideoDetail from './pages/VideoDetail';
 import PrivateRoute from './components/PrivateRoute';
+import CreateScript from './pages/CreateScript';
 
 const NotFound = () => {
   return <h1>404 Not Found</h1>;
@@ -35,7 +36,8 @@ const App = () => {
               </PrivateRoute>
             }
           >
-            <Route path="/create" element={<Create />} />
+            <Route path="/create-script" element={<CreateScript />} />
+            <Route path="/create-video" element={<Create />} />
             <Route path="/create-view" element={<CreateView />} />
             <Route path="/video" element={<Video />} />
             <Route path="/video-detail" element={<VideoDetail />} />

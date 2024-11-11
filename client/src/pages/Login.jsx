@@ -40,6 +40,12 @@ const Login = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   return (
     <>
       <section className="main-body content-login">
@@ -48,7 +54,7 @@ const Login = () => {
             <a href="#">VIDEO AI</a>
           </div>
           <div className="title">ログイン</div>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()} onKeyDown={handleKeyDown}>
             <input type="text" placeholder="メールアドレス" value={id} onChange={(e) => setId(e.target.value)} />
             {errors.id && <p className="error">{errors.id}</p>}
 

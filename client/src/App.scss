@@ -2923,3 +2923,87 @@ a.button.btn-youtube::after {
   color: #ff4d4f;
   margin-top: 5px;
 }
+
+/* TrendList Component */
+.trend-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Styling for list items */
+.trend-list li {
+  display: inline-block;
+  list-style-type: none;
+  background-color: #d4c1ff; /* Soft lavender for a gentle look */
+  padding: 8px 16px;
+  margin: 8px;
+  border-radius: 999px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.trend-list li:hover {
+  background-color: #80b2a1; /* Muted teal for a balanced hover effect */
+  cursor: pointer;
+}
+
+/* Styling for anchor elements within list items */
+.trend-list li > a {
+  color: #f2f2f2; /* Gentle off-white for readability */
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.trend-list li:hover > a {
+  color: #d4c1ff; /* Soft lavender for contrast on muted teal */
+}
+.trend-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Styling for list items */
+.trend-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.trend-list li {
+  display: inline-block;
+  list-style-type: none;
+  background: linear-gradient(90deg, #680079 0%, #047eb2 100%);
+  padding: 8px 16px;
+  margin: 8px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: bold;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.trend-list li:hover {
+  background: linear-gradient(90deg, #047eb2 0%, #680079 100%);
+  cursor: pointer;
+}
+
+.trend-list li > a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.trend-list li:hover > a {
+  color: #e0e0e0;
+}

@@ -15,7 +15,12 @@ function Navigation({ isMenuActive }) {
       <div className={`menu ${isMenuActive ? 'toggle' : ''}`}>
         <ul>
           <li>
-            <NavLink to="/create" activeClassName="active">
+            <NavLink to="/create-script" activeClassName="active">
+              ❖　スクリプト生成
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/create-video" activeClassName="active">
               ❖　動画生成
             </NavLink>
           </li>
