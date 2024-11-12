@@ -5,28 +5,28 @@ module.exports = {
     await queryInterface.bulkInsert('text_scripts', [
       {
         script_id: 1,
-        user_id: 1, // Assume a user with ID 1 exists
-        keyword_id: 1, // Assume a keyword with ID 1 exists
-        title: 'Dance Challenge Script',
-        text_content: 'This is a sample script for TikTok Dance Challenge 2024.',
+        user_id: 1,
+        keyword_id: 1,
+        title: 'ダンスチャレンジスクリプト',
+        text_content: 'これはTikTokのダンスチャレンジ2024用のサンプルスクリプトです。',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
         script_id: 2,
-        user_id: 1, // Assume a user with ID 1 exists
-        keyword_id: 2, // Assume a keyword with ID 2 exists
-        title: 'Tech Review Script',
-        text_content: 'A brief overview for the latest tech review on YouTube.',
+        user_id: 1,
+        keyword_id: 2,
+        title: 'テクノロジーレビュースクリプト',
+        text_content: 'YouTubeの最新テクノロジーレビューについての概要です。',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
         script_id: 3,
-        user_id: 1, // Assume a user with ID 1 exists
-        keyword_id: 3, // Assume a keyword with ID 3 exists
-        title: 'Climate Change Action Script',
-        text_content: 'Twitter trend about climate change actions and awareness.',
+        user_id: 1,
+        keyword_id: 3,
+        title: '気候変動アクションスクリプト',
+        text_content: '気候変動対策と意識向上についてのTwitterトレンドです。',
         created_at: new Date(),
         updated_at: new Date(),
       },

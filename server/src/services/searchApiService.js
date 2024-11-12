@@ -6,7 +6,9 @@ const { Keyword } = db;
 const API_KEY = process.env.SEARCH_API_KEY;
 const SEARCH_API_URL = process.env.SEARCH_API_URL;
 
-const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+const date = new Date();
+date.setHours(0, 0, 0, 0);
+const strDate = date.toISOString().slice(0, 10).replace(/-/g, '');
 
 const getGoogleTrendingKeywords = (data) => {
   const trendingKeywords = [];
@@ -30,13 +32,27 @@ const getYouTubeTrendingKeywords = (data) => {
   return trendingKeywords;
 };
 
+const createKeywords = async (keywords, platform) => {
+  const keywordEntries = keywords.map((keyword) => ({
+    platform,
+    keyword: keyword.replace(/\s+/g, ''),
+    trending_date: date,
+    created_at: new Date(),
+    updated_at: new Date(),
+  }));
+
+  await Keyword.bulkCreate(keywordEntries, {
+    ignoreDuplicates: true,
+  });
+};
+
 // Google Trends function
 const fetchGoogleTrends = async () => {
   try {
     const params = {
       engine: 'google_trends_trending_daily',
-      geo: 'VN',
-      date,
+      geo: 'JP',
+      date: strDate,
       api_key: API_KEY,
     };
 
@@ -46,7 +62,9 @@ const fetchGoogleTrends = async () => {
       throw new Error(response.data.error);
     }
 
-    return getGoogleTrendingKeywords(response.data);
+    const googleKeywords = getGoogleTrendingKeywords(response.data);
+    await createKeywords(googleKeywords, 'Google');
+    return googleKeywords;
   } catch (error) {
     console.error('Error in fetchGoogleTrends:', error);
     throw error;
@@ -58,8 +76,8 @@ const fetchYouTubeTrends = async () => {
   try {
     const params = {
       engine: 'youtube_trends',
-      gl: 'VN',
-      hl: 'vi',
+      gl: 'JP',
+      hl: 'ja',
       api_key: API_KEY,
     };
 
@@ -69,7 +87,9 @@ const fetchYouTubeTrends = async () => {
       throw new Error(response.data.error);
     }
 
-    return getYouTubeTrendingKeywords(response.data);
+    const youtubeKeywords = getYouTubeTrendingKeywords(response.data);
+    await createKeywords(youtubeKeywords, 'YouTube');
+    return youtubeKeywords;
   } catch (error) {
     console.error('Error in fetchYouTubeTrends:', error);
     throw error;

@@ -3,6 +3,7 @@ const { testApi } = require('../controllers/apiController');
 const { handleLogin } = require('../controllers/loginController');
 const { getGoogleTrends, getYouTubeTrends } = require('../controllers/searchApiController');
 const { createKeyword, getAllKeywords } = require('../controllers/keywordController');
+const { generateText } = require('../controllers/GenerateController');
 
 const router = express.Router();
 
@@ -28,6 +29,8 @@ const initApiRoutes = (app) => {
 
   // Route to get all keywords
   router.get('/keyword', getAllKeywords);
+
+  router.post('/generate-text', generateText);
 
   return app.use('/api/v1/', router);
 };

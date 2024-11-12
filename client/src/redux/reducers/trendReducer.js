@@ -16,7 +16,7 @@ const trendsReducer = (state = initialState, action) => {
     case FETCH_TRENDS_SUCCESS:
       return {
         loading: false,
-        trends: action.payload,
+        trends: action.payload.data,
         error: '',
       };
     case FETCH_TRENDS_FAILURE:

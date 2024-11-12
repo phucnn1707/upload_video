@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('video_uploads', [
       {
         upload_id: 1,
-        video_id: 1, // Assume a video with ID 1 exists
+        video_id: 1,
         platform: 'TikTok',
         status: 'uploaded',
         attempted_at: new Date('2024-10-01T10:00:00Z'),
@@ -15,7 +15,7 @@ module.exports = {
       },
       {
         upload_id: 2,
-        video_id: 2, // Assume a video with ID 2 exists
+        video_id: 2,
         platform: 'YouTube',
         status: 'failed',
         attempted_at: new Date('2024-10-02T12:30:00Z'),
@@ -25,7 +25,7 @@ module.exports = {
       },
       {
         upload_id: 3,
-        video_id: 3, // Assume a video with ID 3 exists
+        video_id: 3,
         platform: 'TikTok',
         status: 'pending',
         attempted_at: new Date(),

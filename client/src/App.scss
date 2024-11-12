@@ -2878,6 +2878,17 @@ a.button.btn-youtube::after {
   transition: all 0.3s;
 }
 
+.modal .modal-body button {
+  margin: 0 20px;
+  padding: 0;
+  width: 230px;
+  height: 52px;
+  border-radius: 100px;
+  font-weight: 600;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
 @media all and (max-width: 1000px) {
   .modal .modal-footer button {
     width: 48%;
@@ -3006,4 +3017,27 @@ a.button.btn-youtube::after {
 
 .trend-list li:hover > a {
   color: #e0e0e0;
+}
+
+.modal .modal-body button.btn-generate {
+  position: relative;
+  padding-left: 20px;
+}
+
+.modal .modal-body button.btn-generate::after {
+  position: absolute;
+  content: '';
+  background: url(./assets/images/ico-star.png) no-repeat left center;
+  background-size: 30px;
+  width: 30px;
+  height: 30px;
+  left: 30px;
+  top: 50%;
+  margin-top: -15px;
+}
+
+@media all and (max-width: 640px) {
+  .modal .modal-body button.btn-generate::after {
+    left: 20px;
+  }
 }

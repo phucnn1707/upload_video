@@ -4,21 +4,21 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('linked_accounts', [
       {
-        user_id: 1, // Assume a user with ID 1 exists
+        user_id: 1,
         platform: 'TikTok',
-        platform_user_id: 'tiktok_user_id_123', // Replace with actual platform user ID
-        access_token: 'tiktok_access_token_example', // Replace with actual access token
-        refresh_token: 'tiktok_refresh_token_example', // Replace with actual refresh token
+        platform_user_id: 'tiktok_user_id_123',
+        access_token: 'tiktok_access_token_example',
+        refresh_token: 'tiktok_refresh_token_example',
         linked_at: new Date(),
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        user_id: 1, // Same user or different, based on your needs
+        user_id: 1,
         platform: 'YouTube',
-        platform_user_id: 'youtube_user_id_456', // Replace with actual platform user ID
-        access_token: 'youtube_access_token_example', // Replace with actual access token
-        refresh_token: 'youtube_refresh_token_example', // Replace with actual refresh token
+        platform_user_id: 'youtube_user_id_456',
+        access_token: 'youtube_access_token_example',
+        refresh_token: 'youtube_refresh_token_example',
         linked_at: new Date(),
         created_at: new Date(),
         updated_at: new Date(),

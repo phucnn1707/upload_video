@@ -22,7 +22,7 @@ export const login = (id, password, navigate) => {
       const response = await axios.post('http://localhost:3000/api/v1/login', { email: id, password: password });
       if (response.data.success) {
         localStorage.setItem('authToken', response.data.token);
-        navigate('/create');
+        navigate('/create-script');
         dispatch(loginSuccess(response.data));
       } else {
         dispatch(loginFailure(response.data.message));

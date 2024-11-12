@@ -3,16 +3,9 @@ const { Keyword } = db;
 
 // Service to create a new keyword
 const createKeyword = async ({ platform, keyword, trending_date }) => {
-  // Check if the keyword already exists for the platform and date
-  const existingKeyword = await Keyword.findOne({
-    where: { platform, keyword, trending_date: new Date(trending_date).setHours(0, 0, 0, 0) },
-  });
-  if (existingKeyword) {
-    throw new Error('Keyword already exists for this platform and date');
-  }
+  const parsedKeyword = keyword.replace(/\s+/g, ''); //remove all spaces
 
-  // Create and return the new keyword
-  return await Keyword.create({ platform, keyword, trending_date });
+  return await Keyword.create({ platform, keyword: parsedKeyword, trending_date });
 };
 
 // Service to get all keywords

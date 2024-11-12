@@ -18,7 +18,7 @@ export const fetchTrendsFailure = (error) => ({
 export const fetchTrends = () => async (dispatch) => {
   dispatch(fetchTrendsRequest());
   try {
-    const response = await axios.get('http://localhost:3000/api/v1/');
+    const response = await axios.get('http://localhost:3000/api/v1/keyword');
     dispatch(fetchTrendsSuccess(response.data));
   } catch (error) {
     dispatch(fetchTrendsFailure(error.message));
