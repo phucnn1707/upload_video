@@ -4,36 +4,32 @@ const db = require('../models/index');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
-// Function to check if an email exists in the database
 const checkEmailExists = async (email) => {
-  const user = await db.User.findOne({ where: { email } });
-  return user; // Returns the user if found, otherwise null
+  return await db.User.findOne({ where: { email } });
 };
 
-// Function to check if the provided password matches the stored hashed password
 const checkPassword = (plainPassword, hashedPassword) => {
   return bcrypt.compareSync(plainPassword, hashedPassword);
 };
 
 const login = async (email, password) => {
   try {
-    // Find the user by email
     const user = await checkEmailExists(email);
 
-    // If user does not exist or password is invalid, return a generic error
     if (!user || !checkPassword(password, user.password_hash)) {
       return { success: false, message: 'メールアドレスまたはパスワードが正しくありません' };
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ user: { id: user.user_id, email: user.email, username: user.username } }, JWT_SECRET, {
+      expiresIn: '1h',
+    });
 
-    // If login is successful, return a success response
     return {
       success: true,
       message: 'ログインに成功しました',
       token: token,
       user: {
-        id: user.id,
+        id: user.user_id,
         email: user.email,
         username: user.username,
       },

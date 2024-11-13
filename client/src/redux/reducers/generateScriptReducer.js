@@ -1,12 +1,13 @@
 import { GENERATE_TEXT_REQUEST, GENERATE_TEXT_SUCCESS, GENERATE_TEXT_FAILURE } from '../types';
 
 const initialState = {
+  generatedTitle: '',
   generatedText: '',
   loading: false,
   error: null,
 };
 
-const generateTextReducer = (state = initialState, action) => {
+const generateScriptReducer = (state = initialState, action) => {
   switch (action.type) {
     case GENERATE_TEXT_REQUEST:
       return {
@@ -18,7 +19,8 @@ const generateTextReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        generatedText: action.payload,
+        generatedTitle: action.payload.data.generatedTitle,
+        generatedText: action.payload.data.generatedText,
       };
     case GENERATE_TEXT_FAILURE:
       return {
@@ -31,4 +33,4 @@ const generateTextReducer = (state = initialState, action) => {
   }
 };
 
-export default generateTextReducer;
+export default generateScriptReducer;

@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateText } from '../redux/actions/generateTextActions';
+import { generateScript } from '../redux/actions/generateScriptActions';
 
 const CreateScriptModal = ({ block, onClose }) => {
   const dispatch = useDispatch();
 
-  const generatedText = useSelector((state) => state.generateText?.generatedText);
-  const loading = useSelector((state) => state.generateText?.loading);
-  const error = useSelector((state) => state.generateText?.error);
+  const generatedText = useSelector((state) => state.generateScript?.generatedText);
+  const generatedTitle = useSelector((state) => state.generateScript?.generatedTitle);
+  const loading = useSelector((state) => state.generateScript?.loading);
+  const error = useSelector((state) => state.generateScript?.error);
 
   const [detail, setDetail] = useState('');
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
-    if (!loading && generatedText) {
+    if (!loading && generatedText && generatedTitle) {
       setDetail(generatedText);
+      setTitle(generatedTitle);
     }
-  }, [loading, generatedText]);
+  }, [loading, generatedTitle, generatedText]);
 
-  const handleGenerateText = () => {
-    dispatch(generateText(block.keyword));
+  // Dispatch the generate script action
+  const handleGenerateScript = () => {
+    dispatch(generateScript(block.keyword));
   };
 
   const handleSave = () => {
-    console.log('Saved changes:', { name: block.keyword, detail });
+    console.log('Saved changes:', { name: block.keyword, title, detail });
     onClose();
   };
 
@@ -38,20 +42,30 @@ const CreateScriptModal = ({ block, onClose }) => {
           <div className="modal-body">
             <form>
               <div className="mb-4">
-                <label className="col-form-label">目出し</label>
+                <label className="col-form-label">キーワード</label>
                 <input className="form-control" type="text" value={block.keyword} readOnly />
               </div>
               <div className="mb-4 d-flex justify-content-center">
                 <button
                   type="button"
                   className="btn-gradient btn-generate"
-                  onClick={handleGenerateText}
+                  onClick={handleGenerateScript}
                   disabled={loading}
                 >
                   {loading ? '生成中...' : '動画生成'}
                 </button>
               </div>
               <div className="mb-4">
+                <div className="mb-4">
+                  <label className="col-form-label">目出し</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="目出しを入力してください"
+                  />
+                </div>
                 <label className="col-form-label" htmlFor="message-text">
                   内容
                 </label>

@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux';
 import authReducer from './authReducer';
 import trendsReducer from './trendReducer';
-import generateTextReducer from './generateTextReducer';
+import generateScriptReducer from './generateScriptReducer';
+import textScriptReducer from './textScriptReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   trends: trendsReducer,
-  generateText: generateTextReducer,
+  generateScript: generateScriptReducer,
+  textScripts: textScriptReducer,
 });
 
 export default rootReducer;

@@ -25,9 +25,9 @@ const BlockAiList = ({ blocks }) => {
       {blocks.map((block, index) => (
         <BlockAi
           key={index}
-          name={block.name}
-          detail={block.detail}
-          tags={block.tags}
+          name={block.title}
+          detail={block.text_content}
+          tag={[block.keyword?.keyword]}
           onEditClick={() => handleEditClick(block)}
           onGenerateClick={() => handleGenerateClick(block.name)}
         />

@@ -5,16 +5,15 @@ const TrendList = ({ trends, onTrendClick }) => {
     <div className="blockContent trend-list">
       <ul>
         {trends.map((trend, index) => (
-          <li key={index}>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                onTrendClick(trend);
-              }}
-            >
-              #{trend.keyword}
-            </a>
+          <li
+            key={index}
+            onClick={(e) => {
+              e.preventDefault();
+              onTrendClick(trend);
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <a>#{trend.keyword}</a>
           </li>
         ))}
       </ul>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../services/axiosConfig';
 import { FETCH_TRENDS_FAILURE, FETCH_TRENDS_REQUEST, FETCH_TRENDS_SUCCESS } from '../types';
 
 export const fetchTrendsRequest = () => ({
@@ -18,7 +18,7 @@ export const fetchTrendsFailure = (error) => ({
 export const fetchTrends = () => async (dispatch) => {
   dispatch(fetchTrendsRequest());
   try {
-    const response = await axios.get('http://localhost:3000/api/v1/keyword');
+    const response = await apiClient.get('/keyword');
     dispatch(fetchTrendsSuccess(response.data));
   } catch (error) {
     dispatch(fetchTrendsFailure(error.message));

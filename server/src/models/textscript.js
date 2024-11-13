@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       text_content: {
-        type: DataTypes.STRING(120),
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       title: {

@@ -12,6 +12,7 @@ const createKeyword = async ({ platform, keyword, trending_date }) => {
 const getAllKeywords = async () => {
   return await Keyword.findAll({
     attributes: ['keyword_id', 'platform', 'keyword', 'trending_date', 'createdAt', 'updatedAt'],
+    order: [['trending_date', 'DESC']],
   });
 };
 

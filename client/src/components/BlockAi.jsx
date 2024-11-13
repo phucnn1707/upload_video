@@ -1,17 +1,18 @@
 import React from 'react';
 
-const BlockAi = ({ name, detail, tags, onEditClick, onGenerateClick }) => {
+const BlockAi = ({ name, detail, tag, onEditClick, onGenerateClick }) => {
   return (
     <div className="blockAiDesc">
       <div className="name">{name}</div>
       <div className="detail">{detail}</div>
       <div className="footer">
         <div className="tag">
-          {tags.map((tag, index) => (
+          {/* {tags.map((tag, index) => (
             <a href="#" key={index}>
               {tag}
             </a>
-          ))}
+          ))} */}
+          <a>#{tag}</a>
         </div>
         <div className="button">
           <button className="btn-edit" type="button" onClick={onEditClick}>

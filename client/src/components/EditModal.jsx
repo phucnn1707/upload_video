@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 const EditModal = ({ block, onClose }) => {
-  const [name, setName] = useState(block.name);
-  const [detail, setDetail] = useState(block.detail);
+  const [name, setName] = useState(block.title);
+  const [detail, setDetail] = useState(block.text_content);
 
-  useEffect(() => {
-    setName(block.name);
-    setDetail(block.detail);
-  }, [block]);
+  // useEffect(() => {
+  //   setName(block.title);
+  //   setDetail(block.text_content);
+  // }, [block]);
 
   const handleSave = () => {
     console.log('Saved changes:', { name, detail });

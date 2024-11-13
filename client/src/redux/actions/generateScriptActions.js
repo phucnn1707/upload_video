@@ -1,14 +1,14 @@
-import axios from 'axios';
+import apiClient from '../../services/axiosConfig';
 import { GENERATE_TEXT_FAILURE, GENERATE_TEXT_REQUEST, GENERATE_TEXT_SUCCESS } from '../types';
 
-// Action gọi API và dispatch các trạng thái
-export const generateText = (keyword) => async (dispatch) => {
+export const generateScript = (keyword) => async (dispatch) => {
   dispatch({ type: GENERATE_TEXT_REQUEST });
   try {
-    const response = await axios.post('http://localhost:3000/api/v1/generate-text', { keyword });
+    const response = await apiClient.post('/generate-text', { keyword });
+    console.log(response);
     dispatch({
       type: GENERATE_TEXT_SUCCESS,
-      payload: response.data.generatedText,
+      payload: response.data,
     });
   } catch (error) {
     dispatch({

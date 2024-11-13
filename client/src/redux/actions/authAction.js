@@ -1,6 +1,8 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../types';
 import axios from 'axios';
 
+const URL = import.meta.env.VITE_BASE_URL;
+
 export const loginRequest = () => ({
   type: LOGIN_REQUEST,
 });
@@ -19,9 +21,13 @@ export const login = (id, password, navigate) => {
   return async (dispatch) => {
     dispatch(loginRequest());
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/login', { email: id, password: password });
+      const response = await axios.post(URL + '/login', { email: id, password: password });
       if (response.data.success) {
-        localStorage.setItem('authToken', response.data.token);
+        const token = response.data.token;
+        localStorage.setItem('authToken', token);
+
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
         navigate('/create-script');
         dispatch(loginSuccess(response.data));
       } else {
