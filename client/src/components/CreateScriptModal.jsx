@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateScript } from '../redux/actions/generateScriptActions';
+import { createTextScript } from '../redux/actions/textScriptActions'; // Import action createTextScript
 
 const CreateScriptModal = ({ block, onClose }) => {
   const dispatch = useDispatch();
@@ -9,6 +10,9 @@ const CreateScriptModal = ({ block, onClose }) => {
   const generatedTitle = useSelector((state) => state.generateScript?.generatedTitle);
   const loading = useSelector((state) => state.generateScript?.loading);
   const error = useSelector((state) => state.generateScript?.error);
+
+  const user_id = useSelector((state) => state.auth?.user?.user?.id);
+  console.log(user_id);
 
   const [detail, setDetail] = useState('');
   const [title, setTitle] = useState('');
@@ -26,7 +30,17 @@ const CreateScriptModal = ({ block, onClose }) => {
   };
 
   const handleSave = () => {
-    console.log('Saved changes:', { name: block.keyword, title, detail });
+    const textScriptData = {
+      user_id,
+      keyword_id: block.keyword_id,
+      title,
+      text_content: detail,
+    };
+
+    console.log(textScriptData);
+
+    // dispatch(createTextScript(textScriptData));
+
     onClose();
   };
 
