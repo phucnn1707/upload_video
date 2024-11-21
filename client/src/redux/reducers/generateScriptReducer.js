@@ -1,4 +1,4 @@
-import { GENERATE_TEXT_REQUEST, GENERATE_TEXT_SUCCESS, GENERATE_TEXT_FAILURE } from '../types';
+import { GENERATE_TEXT_REQUEST, GENERATE_TEXT_SUCCESS, GENERATE_TEXT_FAILURE, RESET_GENERATE_SCRIPT } from '../types';
 
 const initialState = {
   generatedTitle: '',
@@ -27,6 +27,10 @@ const generateScriptReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case RESET_GENERATE_SCRIPT:
+      return {
+        ...initialState,
       };
     default:
       return state;

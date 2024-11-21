@@ -40,16 +40,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      image_url: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       srt_file_url: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       duration: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
         allowNull: false,
       },
       is_uploaded: {
@@ -59,10 +60,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       uploaded_at: {
         type: DataTypes.DATE,
-        allowNull: true,
-      },
-      image: {
-        type: DataTypes.STRING,
         allowNull: true,
       },
     },

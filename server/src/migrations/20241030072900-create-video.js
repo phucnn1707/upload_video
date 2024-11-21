@@ -33,16 +33,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      image_url: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       srt_file_url: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       duration: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
         allowNull: false,
       },
       is_uploaded: {

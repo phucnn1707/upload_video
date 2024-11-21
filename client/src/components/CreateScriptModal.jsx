@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateScript } from '../redux/actions/generateScriptActions';
-import { createTextScript } from '../redux/actions/textScriptActions'; // Import action createTextScript
+import { generateScript, resetGenerateScript } from '../redux/actions/generateScriptActions';
+import { createTextScript } from '../redux/actions/textScriptActions';
 
 const CreateScriptModal = ({ block, onClose }) => {
   const dispatch = useDispatch();
@@ -12,7 +12,6 @@ const CreateScriptModal = ({ block, onClose }) => {
   const error = useSelector((state) => state.generateScript?.error);
 
   const user_id = useSelector((state) => state.auth?.user?.user?.id);
-  console.log(user_id);
 
   const [detail, setDetail] = useState('');
   const [title, setTitle] = useState('');
@@ -24,7 +23,6 @@ const CreateScriptModal = ({ block, onClose }) => {
     }
   }, [loading, generatedTitle, generatedText]);
 
-  // Dispatch the generate script action
   const handleGenerateScript = () => {
     dispatch(generateScript(block.keyword));
   };
@@ -33,14 +31,19 @@ const CreateScriptModal = ({ block, onClose }) => {
     const textScriptData = {
       user_id,
       keyword_id: block.keyword_id,
-      title,
-      text_content: detail,
+      generatedTitle: title,
+      generatedText: detail,
     };
 
     console.log(textScriptData);
 
-    // dispatch(createTextScript(textScriptData));
+    dispatch(createTextScript(textScriptData));
 
+    handleClose();
+  };
+
+  const handleClose = () => {
+    dispatch(resetGenerateScript());
     onClose();
   };
 
@@ -96,7 +99,7 @@ const CreateScriptModal = ({ block, onClose }) => {
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-cancel" onClick={onClose}>
+            <button type="button" className="btn btn-cancel" onClick={handleClose}>
               キャンセル
             </button>
             <button type="button" className="btn-gradient" onClick={handleSave}>

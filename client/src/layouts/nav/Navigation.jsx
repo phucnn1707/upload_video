@@ -1,45 +1,36 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
+const navLinks = [
+  { to: '/create-script', label: '❖　スクリプト生成' },
+  { to: '/create-video', label: '❖　動画生成' },
+  { to: '/video', label: '❖　動画一覧' },
+  { to: '/account', label: '❖　アカウント管理' },
+];
+
 function Navigation({ isMenuActive }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-
     navigate('/login');
   };
 
   return (
-    <>
-      <div className={`menu ${isMenuActive ? 'toggle' : ''}`}>
-        <ul>
-          <li>
-            <NavLink to="/create-script" activeClassName="active">
-              ❖　スクリプト生成
+    <div className={`menu ${isMenuActive ? 'toggle' : ''}`}>
+      <ul>
+        {navLinks.map(({ to, label }, index) => (
+          <li key={index}>
+            <NavLink to={to} activeClassName="active">
+              {label}
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/create-video" activeClassName="active">
-              ❖　動画生成
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/video" activeClassName="active">
-              ❖　動画一覧
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/account" activeClassName="active">
-              ❖　アカウント管理
-            </NavLink>
-          </li>
-        </ul>
-        <div className="logout">
-          <button onClick={handleLogout}>ログアウト</button>
-        </div>
+        ))}
+      </ul>
+      <div className="logout">
+        <button onClick={handleLogout}>ログアウト</button>
       </div>
-    </>
+    </div>
   );
 }
 

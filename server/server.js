@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const { connectDB } = require('./src/config/connectDB');
@@ -10,6 +11,10 @@ const initApiRoutes = require('./src/routes/api');
 dotenv.config();
 
 const app = express();
+
+app.use('/public', express.static(path.join(__dirname, '../public')));
+
+console.log(__dirname);
 
 // Middleware
 app.use(cors());
