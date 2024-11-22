@@ -1,11 +1,15 @@
 const OpenAIService = require('../services/OpenAIService');
 const VideoGenerationService = require('../services/videoGenerationService');
+const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
 const fs = require('fs');
 const VideoService = require('../services/videoService');
+const TextScriptService = require('../services/textScriptService');
 
 const POLLING_INTERVAL_MS = 5000;
-const MAX_RETRIES = 12;
+const MAX_RETRIES = 120;
+
+const fontPath = path.resolve(__dirname, '../assets/fonts/NotoSansJP-VariableFont_wght.ttf');
 
 const generateText = async (req, res) => {
   const { keyword } = req.body;
@@ -51,19 +55,27 @@ const generateVideo = async (req, res) => {
   }
 
   try {
-    // Step 1: Request video generation
-    const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl);
+    // Get title from textScriptId
+    const textScriptDetails = await TextScriptService.getTextScriptById(textScriptId);
+    const title = textScriptDetails?.title || 'Default Title';
 
-    if (videoData.status !== 'created') {
-      return res.status(400).json({
-        success: false,
-        message: 'Video generation did not start properly',
-        data: null,
-      });
-    }
+    // Step 1: Request video generation
+    console.log('Requesting video generation...');
+    // const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl);
+
+    // if (videoData.status !== 'created') {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Video generation did not start properly',
+    //     data: null,
+    //   });
+    // }
 
     // Step 2: Poll for video readiness
-    const videoDetails = await pollVideoStatus(videoData.id);
+    console.log('Polling for video readiness...');
+    const videoId = 'tlk_iTXS_lyQq3DtBVmYmZ8JV';
+    // const videoDetails = await pollVideoStatus(videoData.id);
+    const videoDetails = await pollVideoStatus(videoId);
 
     if (!videoDetails || videoDetails.status !== 'done') {
       return res.status(400).json({
@@ -74,14 +86,25 @@ const generateVideo = async (req, res) => {
     }
 
     // Step 3: Download video and subtitles
-    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
+    console.log('Downloading video and subtitles...');
+    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
+    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
 
-    // Step 4: Save video details to the database
+    // Step 4: Merge subtitles into video
+    console.log('Merging subtitles into video...');
+    // const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoData.id}.mp4`);
+    const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoId}.mp4`);
+    await mergeSubtitlesIntoVideo(videoPath, subtitlesPath, mergedVideoPath, title);
+
+    // Step 5: Save video details to the database
+    console.log('Saving video details to database...');
     const newVideo = await VideoService.createVideo({
       user_id,
       script_id: textScriptId,
-      video_url: videoPath, // Public URL for video
-      srt_file_url: subtitlesPath, // Public URL for subtitles
+      // video_url: `/public/video/merged_${videoData.id}.mp4`, // Public URL for video
+      // srt_file_url: `/public/video/${videoData.id}.srt`, // Public URL for subtitles
+      video_url: `/public/video/merged_${videoId}.mp4`, // Public URL for video
+      srt_file_url: `/public/video/${videoId}.srt`, // Public URL for subtitles
       duration: videoDetails.duration,
       image_url: videoDetails.source_url, // Thumbnail image
     });
@@ -91,7 +114,8 @@ const generateVideo = async (req, res) => {
       success: true,
       message: 'AI Video generated, downloaded, and saved successfully',
       data: {
-        videoId: videoData.id,
+        // videoId: videoData.id,
+        videoId: videoId,
         videoPath,
         subtitlesPath,
         newVideo,
@@ -104,6 +128,20 @@ const generateVideo = async (req, res) => {
       data: null,
     });
   }
+};
+
+const mergeSubtitlesIntoVideo = async (videoPath, subtitlesPath, outputPath, title) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg(videoPath)
+      .videoFilter([
+        `subtitles=${subtitlesPath}:force_style='FontName=Noto Sans JP,Fontsize=8,Alignment=2,MarginV=30'`,
+        `drawtext=text=${title}:fontcolor=white:fontsize=30:x=(w-text_w)/2+1:y=50:fontfile=${fontPath}`,
+      ])
+      .output(outputPath)
+      .on('end', () => resolve(outputPath))
+      .on('error', (err) => reject(err))
+      .run();
+  });
 };
 
 const pollVideoStatus = async (videoId) => {
@@ -125,7 +163,7 @@ const pollVideoStatus = async (videoId) => {
 };
 
 const saveVideoFiles = async (videoDetails, videoId) => {
-  const videoFolder = path.resolve(__dirname, `../public/video/`);
+  const videoFolder = path.resolve(__dirname, '../../public/video/');
 
   // Create the folder if it doesn't exist
   if (!fs.existsSync(videoFolder)) {

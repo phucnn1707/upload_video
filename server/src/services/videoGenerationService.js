@@ -22,7 +22,7 @@ class VideoGenerationService {
         headers: {
           accept: 'application/json',
           'content-type': 'application/json',
-          authorization: `Bearer ${API_KEY}`,
+          authorization: `Basic ${API_KEY}`,
         },
         data: {
           source_url: avatarUrl,
@@ -63,14 +63,14 @@ class VideoGenerationService {
         url: `${API_URL}/talks/${id}`,
         headers: {
           accept: 'application/json',
-          authorization: `Bearer ${API_KEY}`,
+          authorization: `Basic ${API_KEY}`,
         },
       };
 
       const response = await axios.request(options);
       return response.data;
     } catch (error) {
-      throw new Error('Failed to retrieve video details: ' + error.message);
+      throw new Error('Failed to retrieve video details: ' + error);
     }
   }
 

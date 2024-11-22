@@ -12,9 +12,7 @@ dotenv.config();
 
 const app = express();
 
-app.use('/public', express.static(path.join(__dirname, '../public')));
-
-console.log(__dirname);
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Middleware
 app.use(cors());
