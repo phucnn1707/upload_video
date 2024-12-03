@@ -1,0 +1,36 @@
+# Node modules (client and server)
+client/node_modules/
+server/node_modules/
+node_modules/
+
+# Build outputs (if applicable)
+client/dist/
+server/build/
+dist/
+build/
+
+# Logs
+*.log
+
+# Ignore public directory (assets)
+client/public/
+
+# Package lock files
+client/package-lock.json
+server/package-lock.json
+package-lock.json
+
+# Ignore specific generated files (if any)
+client/src/generated/**
+server/migrations/**
+
+# Temporary and cache files
+.tmp/
+.cache/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# VSCode settings folder
+.vscode/
