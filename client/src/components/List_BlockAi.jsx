@@ -11,8 +11,8 @@ const BlockAiList = ({ blocks }) => {
     setIsModalOpen(true);
   };
 
-  const handleGenerateClick = (name) => {
-    console.log(`Generate button clicked for: ${name}`);
+  const handleGenerateClick = (title) => {
+    console.log(`Generate button clicked for: ${title}`);
   };
 
   const handleModalClose = () => {
@@ -29,7 +29,7 @@ const BlockAiList = ({ blocks }) => {
           detail={block.text_content}
           tag={[block.keyword?.keyword]}
           onEditClick={() => handleEditClick(block)}
-          onGenerateClick={() => handleGenerateClick(block.name)}
+          onGenerateClick={() => handleGenerateClick(block.title)}
         />
       ))}
       {isModalOpen && selectedBlock && <EditModal block={selectedBlock} onClose={handleModalClose} />}

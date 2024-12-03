@@ -13,6 +13,7 @@ const {
 } = require('../controllers/textScriptController');
 const authMiddleware = require('../middlewares/auth.middleware');
 const { createVideo, getVideos, getVideoById, updateVideo, deleteVideo } = require('../controllers/videoController');
+const { createAvatar, getAllAvatars } = require('../controllers/avatarAiController');
 
 const router = express.Router();
 
@@ -57,6 +58,10 @@ const initApiRoutes = (app) => {
   // Generate AI Video from TextScript
   router.post('/generate-video', generateVideo);
   router.get('/generate-video/:id', getGeneratedVideo);
+
+  // AvatarAI Routes
+  router.post('/avatar', createAvatar);
+  router.get('/avatars', getAllAvatars);
 
   // Apply all routes under the `/api/v1` prefix
   app.use('/api/v1', router);

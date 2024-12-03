@@ -6,9 +6,6 @@ const fs = require('fs');
 const VideoService = require('../services/videoService');
 const TextScriptService = require('../services/textScriptService');
 
-const POLLING_INTERVAL_MS = 5000;
-const MAX_RETRIES = 120;
-
 const fontPath = path.resolve(__dirname, '../assets/fonts/NotoSansJP-VariableFont_wght.ttf');
 
 const generateText = async (req, res) => {
@@ -61,21 +58,21 @@ const generateVideo = async (req, res) => {
 
     // Step 1: Request video generation
     console.log('Requesting video generation...');
-    // const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl);
+    const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl);
 
-    // if (videoData.status !== 'created') {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'Video generation did not start properly',
-    //     data: null,
-    //   });
-    // }
+    if (videoData.status !== 'created') {
+      return res.status(400).json({
+        success: false,
+        message: 'Video generation did not start properly',
+        data: null,
+      });
+    }
 
     // Step 2: Poll for video readiness
     console.log('Polling for video readiness...');
     const videoId = 'tlk_iTXS_lyQq3DtBVmYmZ8JV';
-    // const videoDetails = await pollVideoStatus(videoData.id);
-    const videoDetails = await pollVideoStatus(videoId);
+    const videoDetails = await pollVideoStatus(videoData.id);
+    // const videoDetails = await pollVideoStatus(videoId);
 
     if (!videoDetails || videoDetails.status !== 'done') {
       return res.status(400).json({
@@ -87,13 +84,13 @@ const generateVideo = async (req, res) => {
 
     // Step 3: Download video and subtitles
     console.log('Downloading video and subtitles...');
-    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
-    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
+    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
+    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
 
     // Step 4: Merge subtitles into video
     console.log('Merging subtitles into video...');
-    // const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoData.id}.mp4`);
-    const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoId}.mp4`);
+    const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoData.id}.mp4`);
+    // const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoId}.mp4`);
     await mergeSubtitlesIntoVideo(videoPath, subtitlesPath, mergedVideoPath, title);
 
     // Step 5: Save video details to the database
@@ -101,12 +98,12 @@ const generateVideo = async (req, res) => {
     const newVideo = await VideoService.createVideo({
       user_id,
       script_id: textScriptId,
-      // video_url: `/public/video/merged_${videoData.id}.mp4`, // Public URL for video
-      // srt_file_url: `/public/video/${videoData.id}.srt`, // Public URL for subtitles
-      video_url: `/public/video/merged_${videoId}.mp4`, // Public URL for video
-      srt_file_url: `/public/video/${videoId}.srt`, // Public URL for subtitles
+      video_url: `/public/video/merged_${videoData.id}.mp4`, // Public URL for video
+      srt_file_url: `/public/video/${videoData.id}.srt`, // Public URL for subtitles
+      // video_url: `/public/video/merged_${videoId}.mp4`, // Public URL for video
+      // srt_file_url: `/public/video/${videoId}.srt`, // Public URL for subtitles
       duration: videoDetails.duration,
-      image_url: videoDetails.source_url, // Thumbnail image
+      image_url: avatarUrl, // Thumbnail image
     });
 
     // Step 5: Respond with success
@@ -114,8 +111,8 @@ const generateVideo = async (req, res) => {
       success: true,
       message: 'AI Video generated, downloaded, and saved successfully',
       data: {
-        // videoId: videoData.id,
-        videoId: videoId,
+        videoId: videoData.id,
+        // videoId: videoId,
         videoPath,
         subtitlesPath,
         newVideo,
@@ -144,6 +141,9 @@ const mergeSubtitlesIntoVideo = async (videoPath, subtitlesPath, outputPath, tit
   });
 };
 
+const POLLING_INTERVAL_MS = 5000;
+const MAX_RETRIES = 120;
+
 const pollVideoStatus = async (videoId) => {
   let retries = 0;
 
@@ -162,10 +162,33 @@ const pollVideoStatus = async (videoId) => {
   return null; // Return null if video is not ready within the retry limit
 };
 
+const MAX_DOWNLOAD_RETRIES = 5;
+const DOWNLOAD_RETRY_DELAY_MS = 3000;
+
+const retryDownloadFile = async (url, outputPath) => {
+  let attempts = 0;
+
+  while (attempts < MAX_DOWNLOAD_RETRIES) {
+    try {
+      await VideoGenerationService.downloadFile(url, outputPath);
+      console.log(`Download succeeded: ${outputPath}`);
+      return;
+    } catch (error) {
+      attempts++;
+      console.warn(`Download failed (${attempts}/${MAX_DOWNLOAD_RETRIES}): ${error.message}`);
+
+      if (attempts >= MAX_DOWNLOAD_RETRIES) {
+        throw new Error(`Failed to download file after ${MAX_DOWNLOAD_RETRIES} attempts: ${url}`);
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, DOWNLOAD_RETRY_DELAY_MS));
+    }
+  }
+};
+
 const saveVideoFiles = async (videoDetails, videoId) => {
   const videoFolder = path.resolve(__dirname, '../../public/video/');
 
-  // Create the folder if it doesn't exist
   if (!fs.existsSync(videoFolder)) {
     fs.mkdirSync(videoFolder, { recursive: true });
   }
@@ -173,9 +196,11 @@ const saveVideoFiles = async (videoDetails, videoId) => {
   const videoPath = path.resolve(videoFolder, `${videoId}.mp4`);
   const subtitlesPath = path.resolve(videoFolder, `${videoId}.srt`);
 
-  // Download the video and subtitles
-  await VideoGenerationService.downloadFile(videoDetails.result_url, videoPath);
-  await VideoGenerationService.downloadFile(videoDetails.subtitles_url, subtitlesPath);
+  console.log('Downloading video file...');
+  await retryDownloadFile(videoDetails.result_url, videoPath);
+
+  console.log('Downloading subtitles file...');
+  await retryDownloadFile(videoDetails.subtitles_url, subtitlesPath);
 
   return { videoPath, subtitlesPath };
 };

@@ -1,5 +1,7 @@
 import React from 'react';
 
+const URL = import.meta.env.VITE_VIDEO_URL;
+
 const ModalVideo = ({ isOpen, video, onClose }) => {
   if (!video) return null;
 
@@ -11,7 +13,7 @@ const ModalVideo = ({ isOpen, video, onClose }) => {
         </button>
         <h2>{video.title}</h2>
         <video controls>
-          <source src={video.videoUrl} type="video/mp4" />
+          <source src={`${URL}${video.video_url}`} type="video/mp4" />
           Trình duyệt của bạn không hỗ trợ video.
         </video>
       </div>
