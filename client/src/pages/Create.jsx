@@ -1,16 +1,18 @@
-// Create.js
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTextScripts } from '../redux/actions/textScriptActions';
 import BlockAiList from '../components/List_BlockAi';
+import { fetchAvatars } from '../redux/actions/avatarAction';
 
 const Create = () => {
   const dispatch = useDispatch();
 
-  const { loading, textScripts, error } = useSelector((state) => state.textScripts);
+  const { loading: scriptsLoading, textScripts, error: scriptsError } = useSelector((state) => state.textScripts);
+  const { loading: avatarsLoading, avatars, error: avatarsError } = useSelector((state) => state.avatars);
 
   useEffect(() => {
     dispatch(fetchTextScripts());
+    dispatch(fetchAvatars());
   }, [dispatch]);
 
   return (
@@ -23,7 +25,15 @@ const Create = () => {
           </div>
         </div>
 
-        {loading ? <p>Loading...</p> : error ? <p>Error: {error}</p> : <BlockAiList blocks={textScripts} />}
+        {scriptsLoading || avatarsLoading ? (
+          <p>Loading...</p>
+        ) : scriptsError ? (
+          <p>Error: {scriptsError}</p>
+        ) : avatarsError ? (
+          <p>Error: {avatarsError}</p>
+        ) : (
+          <BlockAiList blocks={textScripts} avatars={avatars} />
+        )}
       </div>
     </>
   );

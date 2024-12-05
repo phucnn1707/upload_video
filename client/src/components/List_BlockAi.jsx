@@ -1,23 +1,43 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import BlockAi from './BlockAi';
 import EditModal from './EditModal';
+import AvatarModal from './AvatarModal';
+import { generateVideo } from '../redux/actions/generateVideoAction';
 
-const BlockAiList = ({ blocks }) => {
+const BlockAiList = ({ blocks, avatars }) => {
   const [selectedBlock, setSelectedBlock] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const { generating } = useSelector((state) => state.generateVideo);
 
   const handleEditClick = (block) => {
     setSelectedBlock(block);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
-  const handleGenerateClick = (title) => {
-    console.log(`Generate button clicked for: ${title}`);
+  const handleGenerateClick = (block) => {
+    setSelectedBlock(block);
+    setIsAvatarModalOpen(true);
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
     setSelectedBlock(null);
+  };
+
+  const handleAvatarModalClose = () => {
+    setIsAvatarModalOpen(false);
+    setSelectedBlock(null);
+  };
+
+  const handleAvatarSelect = (avatar) => {
+    if (selectedBlock) {
+      dispatch(generateVideo(selectedBlock.script_id, avatar.avatar_url));
+    }
+    setIsAvatarModalOpen(false);
   };
 
   return (
@@ -29,10 +49,19 @@ const BlockAiList = ({ blocks }) => {
           detail={block.text_content}
           tag={[block.keyword?.keyword]}
           onEditClick={() => handleEditClick(block)}
-          onGenerateClick={() => handleGenerateClick(block.title)}
+          onGenerateClick={() => handleGenerateClick(block)}
         />
       ))}
-      {isModalOpen && selectedBlock && <EditModal block={selectedBlock} onClose={handleModalClose} />}
+      {isEditModalOpen && selectedBlock && <EditModal block={selectedBlock} onClose={handleEditModalClose} />}
+      {isAvatarModalOpen && (
+        <AvatarModal avatars={avatars} onClose={handleAvatarModalClose} onSelect={handleAvatarSelect} />
+      )}
+      {generating && (
+        <div className="loading-overlay">
+          <div className="loading-circle"></div>
+          <p>ビデオを生成しています。お待ちください...</p>
+        </div>
+      )}
     </div>
   );
 };

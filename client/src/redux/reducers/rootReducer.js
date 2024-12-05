@@ -4,6 +4,8 @@ import trendsReducer from './trendReducer';
 import generateScriptReducer from './generateScriptReducer';
 import textScriptReducer from './textScriptReducer';
 import videoReducer from './videoReducer';
+import { avatarReducer } from './avatarReducer';
+import generateVideoReducer from './generateVideoReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -11,6 +13,8 @@ const rootReducer = combineReducers({
   generateScript: generateScriptReducer,
   textScripts: textScriptReducer,
   videos: videoReducer,
+  avatars: avatarReducer,
+  generateVideo: generateVideoReducer,
 });
 
 export default rootReducer;

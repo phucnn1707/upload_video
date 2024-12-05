@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BlockVideo from './BlockVideo';
 
 const formatDate = (dateString) => {
-  if (!dateString) return '';
+  if (!dateString) return 'N/A';
   const date = new Date(dateString);
   return date.toISOString().split('T')[0];
 };
@@ -21,7 +21,7 @@ const BlockVideoList = ({ videos, onVideoSelect }) => {
     <div className="blockContent blockVideoList">
       {videos.map((video) => (
         <BlockVideo
-          key={video.id}
+          key={video.video_id}
           thumbnail={video.image_url}
           name={video.textScript?.title}
           date={formatDate(video.is_uploaded ? video.date : video.createdAt)}
@@ -36,13 +36,12 @@ const BlockVideoList = ({ videos, onVideoSelect }) => {
 BlockVideoList.propTypes = {
   videos: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      video_id: PropTypes.number.isRequired,
       image_url: PropTypes.string.isRequired,
       textScript: PropTypes.shape({
         title: PropTypes.string.isRequired,
       }),
       createdAt: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired,
       is_uploaded: PropTypes.bool.isRequired,
     })
   ).isRequired,
