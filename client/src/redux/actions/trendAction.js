@@ -18,7 +18,7 @@ export const fetchTrendsFailure = (error) => ({
 export const fetchTrends = () => async (dispatch) => {
   dispatch(fetchTrendsRequest());
   try {
-    const response = await apiClient.get('/keyword');
+    const response = await apiClient.get('/keywords');
     dispatch(fetchTrendsSuccess(response.data));
   } catch (error) {
     dispatch(fetchTrendsFailure(error.message));

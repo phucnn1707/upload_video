@@ -30,7 +30,7 @@ module.exports = {
       },
       access_token: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       refresh_token: {
         type: Sequelize.TEXT,

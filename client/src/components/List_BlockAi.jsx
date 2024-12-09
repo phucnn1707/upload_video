@@ -59,7 +59,7 @@ const BlockAiList = ({ blocks, avatars }) => {
       {generating && (
         <div className="loading-overlay">
           <div className="loading-circle"></div>
-          <p>ビデオを生成しています。お待ちください...</p>
+          <p className="loading-text">ビデオを生成しています。少々お待ちください...</p>
         </div>
       )}
     </div>

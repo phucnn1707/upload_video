@@ -12,7 +12,7 @@ import {
 export const fetchTextScripts = () => async (dispatch) => {
   dispatch({ type: FETCH_TEXTSCRIPTS_REQUEST });
   try {
-    const response = await apiClient.get('/textscripts');
+    const response = await apiClient.get('/text-scripts');
     dispatch({
       type: FETCH_TEXTSCRIPTS_SUCCESS,
       payload: response.data.data,
@@ -29,7 +29,7 @@ export const fetchTextScripts = () => async (dispatch) => {
 export const createTextScript = (textScriptData) => async (dispatch) => {
   dispatch({ type: CREATE_TEXTSCRIPT_REQUEST });
   try {
-    const response = await apiClient.post('/textscripts', textScriptData);
+    const response = await apiClient.post('/text-scripts', textScriptData);
     dispatch({
       type: CREATE_TEXTSCRIPT_SUCCESS,
       payload: response.data.data,
