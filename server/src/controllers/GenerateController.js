@@ -70,7 +70,7 @@ const generateVideo = async (req, res) => {
 
     // Step 2: Poll for video readiness
     console.log('Polling for video readiness...');
-    const videoId = 'tlk_iTXS_lyQq3DtBVmYmZ8JV';
+    const videoId = 'tlk_TrS7tW2vE1Fwibww1Z8gQ';
     const videoDetails = await pollVideoStatus(videoData.id);
     // const videoDetails = await pollVideoStatus(videoId);
 
@@ -162,8 +162,8 @@ const pollVideoStatus = async (videoId) => {
   return null; // Return null if video is not ready within the retry limit
 };
 
-const MAX_DOWNLOAD_RETRIES = 5;
-const DOWNLOAD_RETRY_DELAY_MS = 3000;
+const MAX_DOWNLOAD_RETRIES = 120;
+const DOWNLOAD_RETRY_DELAY_MS = 5000;
 
 const retryDownloadFile = async (url, outputPath) => {
   let attempts = 0;

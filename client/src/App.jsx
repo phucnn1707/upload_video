@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import SNS from './pages/SNS';
 import Create from './pages/Create';
@@ -20,7 +20,10 @@ const App = () => {
     <Router>
       <div className="app-container">
         <Routes>
+          <Route path="/" element={<Navigate to="/create-script" replace />} />
+
           <Route path="/login" element={<Login />} />
+
           <Route
             path="/sns"
             element={
@@ -29,6 +32,7 @@ const App = () => {
               </PrivateRoute>
             }
           />
+
           <Route
             element={
               <PrivateRoute>
@@ -42,8 +46,9 @@ const App = () => {
             <Route path="/video" element={<Video />} />
             <Route path="/video-detail" element={<VideoDetail />} />
             <Route path="/account" element={<Account />} />
-            <Route path="*" element={<NotFound />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>

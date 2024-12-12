@@ -1,10 +1,28 @@
 const linkedAccountService = require('../services/linkedAccountService');
+require('dotenv').config(); // Load environment variables from .env
 
-// Generate Google Authorization URL
+const CLIENT_HOME_URL = process.env.CLIENT_HOME_URL;
+
+// Generate Authorization URL for a specific platform
 const getAuthUrl = (req, res) => {
   try {
+    const { platform } = req.params; // Extract platform from URL
     const userId = req.user?.id;
-    const authUrl = linkedAccountService.generateAuthUrl(userId);
+
+    // Validate user authentication
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated.' });
+    }
+
+    // Validate platform existence
+    if (!platform) {
+      return res.status(400).json({ error: 'Platform is required.' });
+    }
+
+    // Generate the authorization URL
+    const authUrl = linkedAccountService.generateAuthUrl(userId, platform);
+
+    // Respond with the URL and platform name
     res.json({ url: authUrl });
   } catch (error) {
     console.error('Error generating auth URL:', error.message);
@@ -12,23 +30,36 @@ const getAuthUrl = (req, res) => {
   }
 };
 
-// Handle OAuth callback and save tokens
+// Handle OAuth callback for a specific platform
 const handleOAuthCallback = async (req, res) => {
-  const { code, state } = req.query;
+  const { platform } = req.params; // Extract platform from URL
+  const { code, state } = req.query; // Extract query parameters
 
+  // Validate platform existence
+  if (!platform) {
+    return res.status(400).json({ error: 'Platform is required.' });
+  }
+
+  // Validate OAuth query parameters
   if (!code || !state) {
     return res.status(400).json({ error: 'Authorization code and state are required.' });
   }
 
   try {
-    const linkedAccount = await linkedAccountService.handleOAuthCallback(state, code);
-    res.json({
-      message: 'YouTube account successfully linked!',
-      linkedAccount,
-    });
+    // Process the OAuth callback
+    const LinkedAccount = await linkedAccountService.handleOAuthCallback(state, code, platform);
+
+    // Redirect to the client with success status
+    return res.redirect(
+      `${CLIENT_HOME_URL}/sns?platform=${platform}&status=success&platform_user_id=${LinkedAccount.platform_user_id}`
+    );
   } catch (error) {
-    console.error('Error handling OAuth callback:', error.message);
-    res.status(500).json({ error: 'Failed to link YouTube account.' });
+    console.error(`Error handling ${platform} OAuth callback:`, error.message);
+
+    // Redirect to the client with error status
+    return res.redirect(
+      `${CLIENT_HOME_URL}/sns?platform=${platform}&status=error&error=${encodeURIComponent(error.message)}`
+    );
   }
 };
 

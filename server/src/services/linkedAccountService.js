@@ -1,6 +1,5 @@
 const { google } = require('googleapis');
-const fs = require('fs');
-const path = require('path');
+const axios = require('axios');
 const db = require('../models');
 const { LinkedAccount } = db;
 
@@ -13,42 +12,135 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
-// Generate Authorization URL
-exports.generateAuthUrl = (userId) => {
-  return oauth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: ['https://www.googleapis.com/auth/youtube.upload'],
-    state: userId,
-  });
+// Generate Authorization URL for a specific platform
+exports.generateAuthUrl = (userId, platform) => {
+  switch (platform) {
+    case 'youtube':
+      return oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: [
+          'https://www.googleapis.com/auth/youtube.upload',
+          'https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/userinfo.email',
+        ],
+        state: userId,
+      });
+
+    case 'tiktok':
+      const tiktokAuthUrl = `https://www.tiktok.com/auth/authorize?client_key=${process.env.TIKTOK_CLIENT_ID}&scope=user.info.basic,video.upload&response_type=code&redirect_uri=${encodeURIComponent(
+        process.env.TIKTOK_REDIRECT_URI
+      )}&state=${userId}`;
+
+      return tiktokAuthUrl;
+
+    default:
+      throw new Error(`Unsupported platform: ${platform}`);
+  }
 };
 
-// Handle OAuth callback and save tokens
-exports.handleOAuthCallback = async (userId, code) => {
+// Handle OAuth callback for a specific platform and save tokens
+exports.handleOAuthCallback = async (userId, code, platform) => {
   try {
-    // Exchange authorization code for tokens
-    const { tokens } = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
+    let tokens, platformUserId;
 
-    // Save refresh token to file (optional)
-    // const refreshTokenPath = path.join(__dirname, '../tokens/refresh_token.json');
-    // if (tokens.refresh_token) {
-    //   fs.writeFileSync(refreshTokenPath, tokens.refresh_token, 'utf8');
-    //   console.log('Refresh Token saved to:', refreshTokenPath);
-    // }
+    switch (platform) {
+      case 'youtube': {
+        const { tokens: youtubeTokens } = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(youtubeTokens);
 
-    // Save linked account in the database
-    const linkedAccount = await LinkedAccount.create({
-      user_id: userId,
-      platform: 'YouTube',
-      platform_user_id: 'youtube_user_123', // Replace with actual data if needed
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token || null,
-      linked_at: new Date(),
+        platformUserId = await getUserInfo(youtubeTokens.refresh_token);
+
+        tokens = youtubeTokens;
+        break;
+      }
+
+      case 'tiktok': {
+        const tokenResponse = await axios.post('https://open-api.tiktok.com/oauth/access_token/', {
+          client_key: process.env.TIKTOK_CLIENT_ID,
+          client_secret: process.env.TIKTOK_CLIENT_SECRET,
+          code,
+          grant_type: 'authorization_code',
+        });
+
+        const tiktokTokens = tokenResponse.data.data;
+        if (!tiktokTokens) {
+          throw new Error('Failed to retrieve TikTok tokens.');
+        }
+
+        platformUserId = tiktokTokens.open_id;
+        tokens = {
+          access_token: tiktokTokens.access_token,
+          refresh_token: tiktokTokens.refresh_token || null,
+        };
+        break;
+      }
+
+      default:
+        throw new Error(`Unsupported platform: ${platform}`);
+    }
+
+    const existingAccount = await LinkedAccount.findOne({
+      where: { user_id: userId, platform, platform_user_id: platformUserId },
     });
 
-    return linkedAccount;
+    if (existingAccount) {
+      await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
+
+      await existingAccount.update({
+        active: true,
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token || null,
+        linked_at: new Date(),
+      });
+
+      console.log(`Updated account ${platformUserId} to active for user_id: ${userId}`);
+      return existingAccount;
+    } else {
+      await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
+
+      const linkedAccount = await LinkedAccount.create({
+        user_id: userId,
+        platform: platform.charAt(0).toUpperCase() + platform.slice(1),
+        platform_user_id: platformUserId || 'unknown_user',
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token || null,
+        linked_at: new Date(),
+        active: true,
+      });
+
+      console.log(`Created new account ${platformUserId} and set to active for user_id: ${userId}`);
+      return linkedAccount;
+    }
   } catch (error) {
-    console.error('Error handling OAuth callback:', error);
-    throw new Error('Failed to handle OAuth callback.');
+    console.error(`Error handling ${platform} OAuth callback:`, error.message);
+    throw new Error(`Failed to handle ${platform} OAuth callback.`);
+  }
+};
+
+const getUserInfo = async (refreshToken) => {
+  try {
+    // Set the credentials
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
+
+    // Use the People API to fetch user profile information
+    const peopleService = google.people({ version: 'v1', auth: oauth2Client });
+
+    const response = await peopleService.people.get({
+      resourceName: 'people/me',
+      personFields: 'names,emailAddresses,photos',
+    });
+
+    const user = response.data;
+    const name = user.names?.[0]?.displayName || 'Unknown';
+    const email = user.emailAddresses?.[0]?.value || 'Unknown';
+    const picture = user.photos?.[0]?.url || 'Unknown';
+    const id = email; // You can use the email as a unique identifier
+
+    console.log('User Info:', { id, name, email, picture });
+
+    return id; // Use the email as the unique platform_user_id
+  } catch (error) {
+    console.error('Error fetching user info:', error.message);
+    throw error;
   }
 };

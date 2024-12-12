@@ -3358,3 +3358,63 @@ a.button.btn-youtube::after {
     transform: rotate(360deg);
   }
 }
+
+.success-message {
+  color: #4caf50;
+  font-weight: bold;
+  margin: 15px 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+.error-message {
+  color: #f44336;
+  font-weight: bold;
+  margin: 15px 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Enhanced styling for linked buttons */
+.button.linked {
+  background: linear-gradient(90deg, #4caf50, #2e7d32); /* Smooth green gradient */
+  color: #ffffff; /* Bright white text for contrast */
+  // cursor: not-allowed; /* Disable pointer interaction */
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  opacity: 1; /* Full opacity for clarity */
+  border: 1px solid #388e3c; /* Distinct border to match gradient */
+  border-radius: 50px; /* Rounded button for modern look */
+  font-weight: bold; /* Bold text for emphasis */
+  // text-transform: uppercase; /* Consistent text style */
+  padding: 12px 20px; /* Comfortable padding */
+  transition: all 0.3s ease;
+}
+
+.button.linked:hover {
+  background: linear-gradient(90deg, #2e7d32, #1b5e20); /* Darker green gradient on hover */
+  color: #ffffff;
+  transform: scale(1.02); /* Slight zoom effect for interactivity */
+  border-color: #1b5e20; /* Darker border for hover state */
+}
+
+.home-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 24px;
+  height: 24px;
+  background: url('./assets/images/home.png') no-repeat center center;
+  background-size: contain;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.home-icon:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}

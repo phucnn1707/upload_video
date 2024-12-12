@@ -28,7 +28,7 @@ export const login = (id, password, navigate) => {
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-        navigate('/create-script');
+        navigate('/sns');
         dispatch(loginSuccess(response.data));
       } else {
         dispatch(loginFailure(response.data.message));

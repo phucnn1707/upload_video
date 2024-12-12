@@ -6,6 +6,7 @@ import textScriptReducer from './textScriptReducer';
 import videoReducer from './videoReducer';
 import { avatarReducer } from './avatarReducer';
 import generateVideoReducer from './generateVideoReducer';
+import platformReducer from './platformReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   videos: videoReducer,
   avatars: avatarReducer,
   generateVideo: generateVideoReducer,
+  platform: platformReducer,
 });
 
 export default rootReducer;
