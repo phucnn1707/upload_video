@@ -1,8 +1,12 @@
-// src/components/SNS.jsx
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { linkPlatformAccount, handleOAuthSuccess, handleOAuthFailure } from '../redux/actions/platformActions';
+import {
+  linkPlatformAccount,
+  revokePlatformAccount,
+  handleOAuthSuccess,
+  handleOAuthFailure,
+} from '../redux/actions/platformActions';
 
 const SNS = () => {
   const dispatch = useDispatch();
@@ -35,12 +39,37 @@ const SNS = () => {
     }
   }, [location, dispatch]);
 
-  const handlePlatformLink = (platform) => {
-    dispatch(linkPlatformAccount(platform));
+  // Handle linking or revoking a platform account
+  const handlePlatformAction = (platform) => {
+    const state = platformState[platform];
+    if (state.success) {
+      // If already linked, revoke the account
+      dispatch(revokePlatformAccount(platform))
+        .then(() => {
+          // Update success message
+          setSuccessMessage(`${platform.toUpperCase()} アカウントの連携を解除しました！`);
+          setErrorMessage('');
+
+          // Update URLSearchParams to remove query params
+          const updatedParams = new URLSearchParams(location.search);
+          updatedParams.delete('platform');
+          updatedParams.delete('status');
+          updatedParams.delete('platform_user_id');
+          updatedParams.delete('error');
+          navigate(`${location.pathname}?${updatedParams.toString()}`, { replace: true });
+        })
+        .catch((error) => {
+          setErrorMessage(`${platform.toUpperCase()} アカウントの連携解除に失敗しました。`);
+          setSuccessMessage('');
+        });
+    } else {
+      // If not linked, link the account
+      dispatch(linkPlatformAccount(platform));
+    }
   };
 
   const handleNavigateHome = () => {
-    navigate('/'); // Điều hướng về trang Home
+    navigate('/'); // Navigate to Home
   };
 
   const LinkButton = ({ platform, label, successText }) => {
@@ -52,14 +81,18 @@ const SNS = () => {
         className={`button btn-gradient btn-${platform} ${
           state.success ? 'linked' : ''
         } ${state.loading ? 'disabled' : ''}`}
-        onClick={() => handlePlatformLink(platform)}
-        // disabled={state.loading || state.success}
+        onClick={() => handlePlatformAction(platform)}
       >
-        {state.loading
-          ? '接続中...'
-          : state.success
-            ? `${successText} (${state.userPlatformId || '不明なユーザー'})`
-            : `${label} と連携`}
+        {state.loading ? (
+          '処理中...'
+        ) : state.success ? (
+          <div>
+            <div>連携解除</div>
+            <div>{state.userPlatformId || '不明なユーザー'}</div>
+          </div>
+        ) : (
+          `${label} と連携`
+        )}
       </button>
     );
   };

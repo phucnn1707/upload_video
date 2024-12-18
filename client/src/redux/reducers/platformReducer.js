@@ -1,5 +1,11 @@
-// src/redux/reducers/platformReducer.js
-import { LINK_PLATFORM_REQUEST, LINK_PLATFORM_SUCCESS, LINK_PLATFORM_FAILURE } from '../types';
+import {
+  LINK_PLATFORM_REQUEST,
+  LINK_PLATFORM_SUCCESS,
+  LINK_PLATFORM_FAILURE,
+  REVOKE_PLATFORM_REQUEST,
+  REVOKE_PLATFORM_SUCCESS,
+  REVOKE_PLATFORM_FAILURE,
+} from '../types';
 
 const initialState = {
   youtube: { loading: false, success: false, error: null, userPlatformId: null },
@@ -26,11 +32,12 @@ const loadFromLocalStorage = () => {
   }
 };
 
-// Platform reducer to handle platform linking states
+// Platform reducer to handle platform linking and revoking states
 const platformReducer = (state = loadFromLocalStorage(), action) => {
-  const { platform } = action.payload || {};
+  const platform = action.payload?.platform;
 
   switch (action.type) {
+    // Linking actions
     case LINK_PLATFORM_REQUEST:
       return {
         ...state,
@@ -66,6 +73,46 @@ const platformReducer = (state = loadFromLocalStorage(), action) => {
           success: false,
           error: action.payload.error,
           userPlatformId: null,
+        },
+      };
+      saveToLocalStorage(updatedState);
+      return updatedState;
+    }
+
+    // Revoking actions
+    case REVOKE_PLATFORM_REQUEST:
+      return {
+        ...state,
+        [platform]: {
+          ...state[platform],
+          loading: true,
+          error: null,
+        },
+      };
+
+    case REVOKE_PLATFORM_SUCCESS: {
+      const updatedState = {
+        ...state,
+        [platform]: {
+          ...state[platform],
+          loading: false,
+          success: false, // Reset success to false
+          error: null,
+          userPlatformId: null, // Clear the userPlatformId
+        },
+      };
+      console.log(updatedState);
+      saveToLocalStorage(updatedState);
+      return updatedState;
+    }
+
+    case REVOKE_PLATFORM_FAILURE: {
+      const updatedState = {
+        ...state,
+        [platform]: {
+          ...state[platform],
+          loading: false,
+          error: action.payload.error,
         },
       };
       saveToLocalStorage(updatedState);

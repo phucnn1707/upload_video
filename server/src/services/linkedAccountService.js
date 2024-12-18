@@ -84,7 +84,7 @@ exports.handleOAuthCallback = async (userId, code, platform) => {
     });
 
     if (existingAccount) {
-      await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
+      // await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
 
       await existingAccount.update({
         active: true,
@@ -96,7 +96,7 @@ exports.handleOAuthCallback = async (userId, code, platform) => {
       console.log(`Updated account ${platformUserId} to active for user_id: ${userId}`);
       return existingAccount;
     } else {
-      await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
+      // await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
 
       const linkedAccount = await LinkedAccount.create({
         user_id: userId,
@@ -142,5 +142,56 @@ const getUserInfo = async (refreshToken) => {
   } catch (error) {
     console.error('Error fetching user info:', error.message);
     throw error;
+  }
+};
+
+exports.revokeRefreshToken = async (userId, platform) => {
+  try {
+    // Find the active linked account for the user and platform
+    const linkedAccount = await LinkedAccount.findOne({
+      where: { user_id: userId, platform, active: true },
+    });
+
+    if (!linkedAccount) {
+      throw new Error(`No active linked account found for platform: ${platform}`);
+    }
+
+    const { refresh_token } = linkedAccount;
+
+    if (!refresh_token) {
+      throw new Error('No refresh token found for the linked account.');
+    }
+
+    switch (platform) {
+      case 'youtube': {
+        // Initialize the OAuth2 client
+        const oauth2Client = new google.auth.OAuth2(
+          process.env.CLIENT_ID,
+          process.env.CLIENT_SECRET,
+          process.env.REDIRECT_URI
+        );
+
+        // Revoke the refresh token
+        const revokeResponse = await oauth2Client.revokeToken(refresh_token);
+
+        if (revokeResponse.status === 200) {
+          console.log(`Successfully revoked YouTube refresh token for user_id: ${userId}`);
+        } else {
+          throw new Error('Failed to revoke YouTube refresh token.');
+        }
+        break;
+      }
+
+      // Other platform cases like TikTok can go here...
+      default:
+        throw new Error(`Unsupported platform for revocation: ${platform}`);
+    }
+
+    // Mark the linked account as inactive after revocation
+    await linkedAccount.update({ active: false });
+    console.log(`Deactivated linked account for platform: ${platform}, user_id: ${userId}`);
+  } catch (error) {
+    console.error(`Error revoking refresh token for ${platform}:`, error.message);
+    throw new Error(`Failed to revoke refresh token for ${platform}.`);
   }
 };

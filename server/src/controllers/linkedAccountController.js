@@ -63,4 +63,30 @@ const handleOAuthCallback = async (req, res) => {
   }
 };
 
-module.exports = { getAuthUrl, handleOAuthCallback };
+// Revoke refresh token for a specific platform
+const revokeRefreshToken = async (req, res) => {
+  const { platform } = req.params; // Extract platform from URL
+  const userId = req.user?.id;
+
+  // Validate user authentication
+  if (!userId) {
+    return res.status(401).json({ error: 'User not authenticated.' });
+  }
+
+  // Validate platform existence
+  if (!platform) {
+    return res.status(400).json({ error: 'Platform is required.' });
+  }
+
+  try {
+    // Revoke the refresh token
+    await linkedAccountService.revokeRefreshToken(userId, platform);
+
+    res.json({ message: `Refresh token for ${platform} revoked successfully.` });
+  } catch (error) {
+    console.error(`Error revoking ${platform} refresh token:`, error.message);
+    res.status(500).json({ error: `Failed to revoke ${platform} refresh token.` });
+  }
+};
+
+module.exports = { getAuthUrl, handleOAuthCallback, revokeRefreshToken };

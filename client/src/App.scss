@@ -3392,6 +3392,14 @@ a.button.btn-youtube::after {
   transition: all 0.3s ease;
 }
 
+.button.linked div,
+.button.linked span {
+  color: inherit;
+  font-weight: inherit;
+  text-transform: inherit;
+  line-height: 1.5;
+}
+
 .button.linked:hover {
   background: linear-gradient(90deg, #2e7d32, #1b5e20); /* Darker green gradient on hover */
   color: #ffffff;
