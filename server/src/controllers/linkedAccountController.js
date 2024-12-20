@@ -89,4 +89,16 @@ const revokeRefreshToken = async (req, res) => {
   }
 };
 
-module.exports = { getAuthUrl, handleOAuthCallback, revokeRefreshToken };
+const getActiveLinkedAccounts = async (req, res) => {
+  try {
+    const userId = req.user.id; // Extract user ID from authenticated user
+    const activeAccounts = await linkedAccountService.getActiveLinkedAccounts(userId);
+
+    return res.status(200).json({ success: true, data: activeAccounts });
+  } catch (error) {
+    console.error('Error fetching active linked accounts:', error.message);
+    return res.status(500).json({ success: false, error: 'Failed to fetch active linked accounts.' });
+  }
+};
+
+module.exports = { getAuthUrl, handleOAuthCallback, revokeRefreshToken, getActiveLinkedAccounts };

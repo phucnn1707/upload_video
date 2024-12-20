@@ -195,3 +195,19 @@ exports.revokeRefreshToken = async (userId, platform) => {
     throw new Error(`Failed to revoke refresh token for ${platform}.`);
   }
 };
+
+// Service to fetch active linked accounts
+exports.getActiveLinkedAccounts = async (userId) => {
+  try {
+    // Query the database for active linked accounts for the user
+    const activeAccounts = await LinkedAccount.findAll({
+      where: { user_id: userId, active: true },
+      attributes: ['platform', 'platform_user_id', 'linked_at'], // Include necessary fields
+    });
+
+    return activeAccounts;
+  } catch (error) {
+    console.error('Error fetching active linked accounts:', error.message);
+    throw new Error('Database query failed.');
+  }
+};

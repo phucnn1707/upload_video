@@ -4,11 +4,11 @@ import imageVideo from '../assets/images/dummy2.png';
 const BlockVideo = ({ thumbnail, name, date, isPosted, onClick }) => {
   return (
     <div className="blockVideo">
-      <div onClick={onClick}>
-        <div className="thumbs">
-          <img src={thumbnail || imageVideo} alt="" />
+      <div>
+        <div className="thumbs" onClick={onClick}>
+          <img src={thumbnail || imageVideo} alt="" className="hoverable-img" />
         </div>
-        <div className="name">{name}</div>
+        <div className="name hoverable-name">{name}</div>
       </div>
       <div className="date">{date}</div>
       <button className={`btn-gradient ${isPosted ? 'btn-posted' : 'btn-post'}`} type="button">

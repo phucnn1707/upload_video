@@ -1,5 +1,10 @@
 const express = require('express');
-const { getAuthUrl, handleOAuthCallback, revokeRefreshToken } = require('../controllers/linkedAccountController'); // Updated import
+const {
+  getAuthUrl,
+  handleOAuthCallback,
+  revokeRefreshToken,
+  getActiveLinkedAccounts,
+} = require('../controllers/linkedAccountController'); // Updated import
 const authMiddleware = require('../middlewares/auth.middleware');
 
 const router = express.Router();
@@ -12,5 +17,8 @@ router.get('/:platform/oauth-callback', handleOAuthCallback);
 
 // Route to revoke refresh token for a specific platform
 router.post('/:platform/revoke-token', authMiddleware, revokeRefreshToken);
+
+// Route to get active linked accounts
+router.get('/', authMiddleware, getActiveLinkedAccounts);
 
 module.exports = router;

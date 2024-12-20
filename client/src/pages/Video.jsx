@@ -24,9 +24,9 @@ const Video = () => {
     setSelectedVideo(null);
   };
 
-  if (loading) {
-    return <div className="loading">Loading videos...</div>;
-  }
+  // if (loading) {
+  //   return <div className="loading">Loading videos...</div>;
+  // }
 
   if (error) {
     return <div className="error">Error loading videos: {error}</div>;
