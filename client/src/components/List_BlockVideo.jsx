@@ -21,11 +21,12 @@ const BlockVideoList = ({ videos, onVideoSelect }) => {
     <div className="blockContent blockVideoList">
       {videos.map((video) => (
         <BlockVideo
-          key={video.video_id}
+          videoId={video.video_id}
           thumbnail={video.image_url}
           name={video.textScript?.title}
-          date={formatDate(video.is_uploaded ? video.date : video.createdAt)}
+          date={formatDate(video.is_uploaded ? video.uploaded_at : video.createdAt)}
           isPosted={video.is_uploaded}
+          isUploaded={video.is_uploaded}
           onClick={() => onVideoSelect(video)}
         />
       ))}

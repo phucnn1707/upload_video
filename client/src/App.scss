@@ -3446,3 +3446,24 @@ a.button.btn-youtube::after {
   transform: scale(1.1);
   opacity: 0.8;
 }
+
+/* Button in "uploaded" state */
+button.btn-uploaded {
+  background: #4caf50; /* Green background to indicate success */
+  color: #fff; /* White text for better contrast */
+  border: 1px solid #388e3c; /* Slightly darker green border for emphasis */
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  font-weight: bold; /* Bold text for a clear, strong appearance */
+  cursor: not-allowed; /* Change cursor to indicate the button is not clickable */
+  transition: all 0.3s ease; /* Smooth transition for visual effects */
+}
+
+/* Hover effect for the "uploaded" button */
+button.btn-uploaded:hover {
+  background: #388e3c; /* Darker green background for hover effect */
+  color: #ffffff; /* Maintain white text for readability */
+  border-color: #2e7d32; /* Slightly darker green border on hover */
+  transform: scale(1.02); /* Slightly enlarge the button for interactivity */
+}

@@ -69,7 +69,7 @@ const CreateScriptModal = ({ block, onClose }) => {
                   onClick={handleGenerateScript}
                   disabled={loading}
                 >
-                  {loading ? '生成中...' : '動画生成'}
+                  {loading ? '生成中...' : 'テキストを生成する'}
                 </button>
               </div>
               <div className="mb-4">
