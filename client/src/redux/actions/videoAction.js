@@ -36,8 +36,6 @@ export const uploadVideo = (videoId) => async (dispatch) => {
       type: UPLOAD_VIDEO_SUCCESS,
       payload: { videoId, data: response.data },
     });
-
-    alert('Video uploaded successfully!');
   } catch (error) {
     dispatch({
       type: UPLOAD_VIDEO_FAILURE,
@@ -46,7 +44,5 @@ export const uploadVideo = (videoId) => async (dispatch) => {
         error: error.response?.data?.message || error.message || 'Failed to upload video',
       },
     });
-
-    alert('Failed to upload video. Please try again.');
   }
 };

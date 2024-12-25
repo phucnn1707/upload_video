@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import imageVideo from '../assets/images/dummy2.png';
 import { uploadVideo } from '../redux/actions/videoAction';
+import { toast } from 'react-toastify';
 
 const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => {
   const dispatch = useDispatch();
@@ -10,8 +11,13 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
   const videoUploadState = useSelector((state) => state.videos.uploads[videoId] || {});
 
   // Handle the upload button click
-  const handlePost = () => {
-    dispatch(uploadVideo(videoId));
+  const handlePost = async () => {
+    try {
+      await dispatch(uploadVideo(videoId));
+      toast.success('動画のアップロードが成功しました！');
+    } catch (error) {
+      toast.error('動画のアップロードに失敗しました。');
+    }
   };
 
   // Determine the button states
@@ -31,12 +37,12 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
       <div className="date">{date}</div>
       {/* Upload button with dynamic styles and states */}
       <button
-        className={`btn-gradient ${isSuccess ? 'btn-uploaded' : 'btn-post'}`} // Dynamic class based on upload status
+        className={`btn-gradient ${isSuccess ? 'btn-uploaded' : 'btn-post'}`}
         type="button"
-        onClick={!isSuccess ? handlePost : null} // Prevent click if already uploaded
-        disabled={isSuccess} // Disable button while uploading or if already uploaded
+        onClick={!isSuccess ? handlePost : null}
+        disabled={isSuccess}
       >
-        {isSuccess ? '投稿済' : '投稿する'} {/* Dynamic button text */}
+        {isSuccess ? '投稿済' : videoUploadState.loading ? '投稿中...' : '投稿する'}
       </button>
     </div>
   );

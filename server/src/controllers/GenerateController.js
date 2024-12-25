@@ -9,7 +9,7 @@ const TextScriptService = require('../services/textScriptService');
 const fontPath = path.resolve(__dirname, '../assets/fonts/NotoSansJP-VariableFont_wght.ttf');
 
 const generateText = async (req, res) => {
-  const { keyword } = req.body;
+  const { keyword, options = {} } = req.body;
 
   // Check if keyword is provided
   if (!keyword) {
@@ -18,7 +18,7 @@ const generateText = async (req, res) => {
 
   try {
     // Generate text using OpenAI service
-    const response = await OpenAIService.generateTextFromKeyword(keyword);
+    const response = await OpenAIService.generateTextFromKeyword(keyword, options);
     const { generatedTitle, generatedText } = response;
 
     // Return success response
@@ -150,8 +150,14 @@ const pollVideoStatus = async (videoId) => {
   while (retries < MAX_RETRIES) {
     const videoDetails = await VideoGenerationService.getGeneratedVideoDetails(videoId);
 
-    if (videoDetails.status === 'done') {
+    // Check if video generation is complete and required URLs are available
+    if (videoDetails.status === 'done' && videoDetails.result_url && videoDetails.subtitles_url) {
       return videoDetails;
+    }
+
+    // Log a message if URLs are missing
+    if (videoDetails.status === 'done' && (!videoDetails.result_url || !videoDetails.subtitles_url)) {
+      console.warn(`Video details are incomplete. Missing URLs. Retrying (${retries + 1}/${MAX_RETRIES})...`);
     }
 
     // Wait for the next poll
@@ -159,11 +165,11 @@ const pollVideoStatus = async (videoId) => {
     retries++;
   }
 
-  return null; // Return null if video is not ready within the retry limit
+  return null; // Return null if video is not ready or URLs are missing within the retry limit
 };
 
-const MAX_DOWNLOAD_RETRIES = 120;
-const DOWNLOAD_RETRY_DELAY_MS = 5000;
+const MAX_DOWNLOAD_RETRIES = 5;
+const DOWNLOAD_RETRY_DELAY_MS = 3000;
 
 const retryDownloadFile = async (url, outputPath) => {
   let attempts = 0;

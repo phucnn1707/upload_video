@@ -14,7 +14,6 @@ const ModalVideo = ({ isOpen, video, onClose }) => {
         <h2>{video.title}</h2>
         <video controls>
           <source src={`${URL}${video.video_url}`} type="video/mp4" />
-          Trình duyệt của bạn không hỗ trợ video.
         </video>
       </div>
     </div>

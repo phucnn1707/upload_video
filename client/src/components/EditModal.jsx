@@ -4,11 +4,6 @@ const EditModal = ({ block, onClose }) => {
   const [name, setName] = useState(block.title);
   const [detail, setDetail] = useState(block.text_content);
 
-  // useEffect(() => {
-  //   setName(block.title);
-  //   setDetail(block.text_content);
-  // }, [block]);
-
   const handleSave = () => {
     console.log('Saved changes:', { name, detail });
     onClose();
@@ -34,27 +29,54 @@ const EditModal = ({ block, onClose }) => {
             <form>
               <div className="mb-4">
                 <label className="col-form-label" htmlFor="name">
-                  目出し
+                  見出し
                 </label>
-                <input
-                  className="form-control"
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+                <div className="position-relative">
+                  <input
+                    className="form-control"
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value.slice(0, 30))}
+                    style={{ paddingRight: '60px' }}
+                  />
+                  <span
+                    className="text-muted position-absolute"
+                    style={{
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    {name.length}/30
+                  </span>
+                </div>
               </div>
               <div className="mb-0">
                 <label className="col-form-label" htmlFor="message-text">
                   内容
                 </label>
-                <textarea
-                  className="form-control"
-                  id="message-text"
-                  rows="4"
-                  value={detail}
-                  onChange={(e) => setDetail(e.target.value)}
-                />
+                <div className="position-relative">
+                  <textarea
+                    className="form-control"
+                    id="message-text"
+                    rows="4"
+                    value={detail}
+                    onChange={(e) => setDetail(e.target.value.slice(0, 99999))}
+                    style={{ paddingRight: '90px' }}
+                  />
+                  <span
+                    className="text-muted position-absolute"
+                    style={{
+                      right: '10px',
+                      bottom: '10px',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    {detail.length}/99999
+                  </span>
+                </div>
               </div>
             </form>
           </div>

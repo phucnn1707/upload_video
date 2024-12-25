@@ -4,6 +4,7 @@ import BlockAi from './BlockAi';
 import EditModal from './EditModal';
 import AvatarModal from './AvatarModal';
 import { generateVideo } from '../redux/actions/generateVideoAction';
+import { toast } from 'react-toastify';
 
 const BlockAiList = ({ blocks, avatars }) => {
   const [selectedBlock, setSelectedBlock] = useState(null);
@@ -33,9 +34,14 @@ const BlockAiList = ({ blocks, avatars }) => {
     setSelectedBlock(null);
   };
 
-  const handleAvatarSelect = (avatar) => {
+  const handleAvatarSelect = async (avatar) => {
     if (selectedBlock) {
-      dispatch(generateVideo(selectedBlock.script_id, avatar.avatar_url));
+      try {
+        await dispatch(generateVideo(selectedBlock.script_id, avatar.avatar_url));
+        toast.success('ビデオが正常に生成されました！');
+      } catch (error) {
+        toast.error('ビデオ生成中にエラーが発生しました。');
+      }
     }
     setIsAvatarModalOpen(false);
   };
