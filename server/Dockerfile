@@ -26,11 +26,11 @@ RUN npm install
 COPY . .
 
 # Copy the wait-for-it script and make it executable
-COPY wait-for-it.sh /app/wait-for-it.sh
-RUN chmod +x /app/wait-for-it.sh
+# COPY wait-for-it.sh /app/wait-for-it.sh
+# RUN chmod +x /app/wait-for-it.sh
 
 # Expose the port the server will run on
 EXPOSE 3000
 
 # Run the server after MySQL is ready
-CMD ["/app/wait-for-it.sh", "db:3306", "--", "npm", "run", "dev"]
+CMD ["npm", "start"]

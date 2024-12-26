@@ -12,12 +12,21 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
   },
 });
 
-const connectDB = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('MySQL connected');
-  } catch (error) {
-    console.error('Unable to connect to the MySQL database:', error);
+const connectDB = async (retries = 5, delay = 5000) => {
+  while (retries > 0) {
+    try {
+      await sequelize.authenticate();
+      console.log('MySQL connected');
+      return;
+    } catch (error) {
+      console.error(`Unable to connect to the MySQL database. Retries left: ${retries - 1}`, error.message);
+      retries -= 1;
+      if (retries === 0) {
+        console.error('Exhausted all retries. MySQL connection failed.');
+        process.exit(1);
+      }
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
   }
 };
 
