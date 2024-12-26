@@ -1,4 +1,4 @@
-const OpenAIService = require('../services/OpenAIService');
+const OpenAIService = require('../services/openAIService');
 const VideoGenerationService = require('../services/videoGenerationService');
 const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
