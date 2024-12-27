@@ -84,7 +84,7 @@ exports.handleOAuthCallback = async (userId, code, platform) => {
     });
 
     if (existingAccount) {
-      // await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
+      await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
 
       await existingAccount.update({
         active: true,
@@ -96,7 +96,7 @@ exports.handleOAuthCallback = async (userId, code, platform) => {
       console.log(`Updated account ${platformUserId} to active for user_id: ${userId}`);
       return existingAccount;
     } else {
-      // await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
+      await LinkedAccount.update({ active: false }, { where: { user_id: userId, platform } });
 
       const linkedAccount = await LinkedAccount.create({
         user_id: userId,
