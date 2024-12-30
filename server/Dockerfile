@@ -8,22 +8,25 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Copy the pre-downloaded NotoSansJP font into the container
-COPY ./src/assets/fonts/NotoSansJP-VariableFont_wght.ttf /usr/share/fonts/truetype/noto/NotoSansJP-VariableFont_wght.ttf
+COPY ./server/src/assets/fonts/NotoSansJP-VariableFont_wght.ttf /usr/share/fonts/truetype/noto/NotoSansJP-VariableFont_wght.ttf
 
 # Update the font cache to include the new font
 RUN fc-cache -fv
+
+# Copy the rest of the application code
+COPY ./server ./app
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Copy package.json and package-lock.json to install dependencies
-COPY package*.json ./
+# COPY package*.json ./
 
 # Install Node.js dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY . .
+# COPY . .
 
 # Copy the wait-for-it script and make it executable
 # COPY wait-for-it.sh /app/wait-for-it.sh
