@@ -59,7 +59,6 @@ volumes:
   api_node_modules:
     driver: local
 
-
 networks:
   video_ai_network:
     driver: bridge
