@@ -16,11 +16,33 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
+      avatar_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
       avatar_url: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           isUrl: true,
+        },
+      },
+      voice_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          isIn: [['microsoft', 'elevenlabs', 'amazon']],
         },
       },
     },

@@ -9,11 +9,32 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
+      avatar_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
       avatar_url: {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
           isUrl: true,
+        },
+      },
+      voice_id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
         },
       },
       created_at: {

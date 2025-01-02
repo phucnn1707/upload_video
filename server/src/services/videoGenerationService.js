@@ -7,7 +7,7 @@ const API_KEY = process.env.DID_API_KEY;
 const API_URL = process.env.DID_API_URL;
 
 class VideoGenerationService {
-  static async generateVideoFromTextScript(textScriptId, avatarUrl) {
+  static async generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type) {
     try {
       // Fetch the text script from the database
       const textScript = await TextScript.findByPk(textScriptId);
@@ -29,9 +29,9 @@ class VideoGenerationService {
           script: {
             type: 'text',
             subtitles: true,
-            provider: { type: 'microsoft', voice_id: 'ja-JP-ShioriNeural' },
+            provider: { type: type, voice_id: voice_id },
             input: textScript.text_content,
-            ssml: true,
+            ssml: type === 'amazon' ? false : true,
           },
           config: {
             fluent: 'false',

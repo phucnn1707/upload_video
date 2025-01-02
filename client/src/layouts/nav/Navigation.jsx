@@ -13,6 +13,7 @@ function Navigation({ isMenuActive }) {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('platformState');
     navigate('/login');
   };
 

@@ -39,14 +39,14 @@ const generateText = async (req, res) => {
 };
 
 const generateVideo = async (req, res) => {
-  const { textScriptId, avatarUrl } = req.body;
+  const { textScriptId, avatarUrl, voice_id, type } = req.body;
   const user_id = req.user?.id; // Assuming authentication middleware sets req.user
 
   // Validate required fields
-  if (!textScriptId || !avatarUrl || !user_id) {
+  if (!textScriptId || !avatarUrl || !voice_id || !type || !user_id) {
     return res.status(400).json({
       success: false,
-      message: 'Missing required fields: textScriptId, avatarUrl, or user_id',
+      message: 'Missing required fields: textScriptId, avatarUrl, voice, type or user_id',
       data: null,
     });
   }
@@ -58,7 +58,7 @@ const generateVideo = async (req, res) => {
 
     // Step 1: Request video generation
     console.log('Requesting video generation...');
-    const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl);
+    const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type);
 
     if (videoData.status !== 'created') {
       return res.status(400).json({
