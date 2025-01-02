@@ -1,10 +1,10 @@
 const avatarAiService = require('../services/avatarAiService');
 
 const createAvatar = async (req, res) => {
-  const { avatar_url } = req.body;
+  const { avatar_name, avatar_url, voice_id, type } = req.body;
 
   try {
-    const avatar = await avatarAiService.createAvatar(avatar_url);
+    const avatar = await avatarAiService.createAvatar(avatar_name, avatar_url, voice_id, type);
     res.status(201).json({ success: true, message: 'Avatar created successfully', data: avatar });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

@@ -37,7 +37,7 @@ const BlockAiList = ({ blocks, avatars }) => {
   const handleAvatarSelect = async (avatar) => {
     if (selectedBlock) {
       try {
-        await dispatch(generateVideo(selectedBlock.script_id, avatar.avatar_url));
+        await dispatch(generateVideo(selectedBlock.script_id, avatar.avatar_url, avatar.voice_id, avatar.type));
         toast.success('ビデオが正常に生成されました！');
       } catch (error) {
         toast.error('ビデオ生成中にエラーが発生しました。');

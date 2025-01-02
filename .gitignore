@@ -27,6 +27,7 @@ server/package-lock.json
 # Ignore public/static files (optional if needed)
 client/public/
 server/public/
+public
 
 # Ignore temporary files and caches
 .tmp/

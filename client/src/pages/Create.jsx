@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTextScripts } from '../redux/actions/textScriptActions';
 import BlockAiList from '../components/List_BlockAi';
 import { fetchAvatars } from '../redux/actions/avatarAction';
-import DatePicker from 'react-datepicker'; // Import DatePicker
-import 'react-datepicker/dist/react-datepicker.css'; // Import CSS DatePicker
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Create = () => {
   const dispatch = useDispatch();
-  const [filterDate, setFilterDate] = useState(null); // Lưu giá trị ngày đã chọn (null ban đầu)
+  const [filterDate, setFilterDate] = useState(null);
 
   const { loading: scriptsLoading, textScripts, error: scriptsError } = useSelector((state) => state.textScripts);
   const { loading: avatarsLoading, avatars, error: avatarsError } = useSelector((state) => state.avatars);
@@ -18,9 +18,8 @@ const Create = () => {
     dispatch(fetchAvatars());
   }, [dispatch]);
 
-  // Lọc textScripts theo ngày, tháng, năm
   const filteredScripts = textScripts.filter((script) => {
-    if (!filterDate) return true; // Nếu không chọn ngày, hiển thị tất cả
+    if (!filterDate) return true;
 
     const scriptDate = new Date(script.createdAt);
     return (
@@ -51,7 +50,7 @@ const Create = () => {
         <p>Error: {scriptsError}</p>
       ) : avatarsError ? (
         <p>Error: {avatarsError}</p>
-      ) : filteredScripts.length === 0 ? ( // Kiểm tra nếu không có kết quả sau khi lọc
+      ) : filteredScripts.length === 0 ? (
         <p>No scripts available for the selected date.</p>
       ) : (
         <BlockAiList blocks={filteredScripts} avatars={avatars} />
