@@ -6,7 +6,9 @@ import {
   revokePlatformAccount,
   handleOAuthSuccess,
   handleOAuthFailure,
+  getLinkedAccounts,
 } from '../redux/actions/platformActions';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const SNS = () => {
   const dispatch = useDispatch();
@@ -16,6 +18,13 @@ const SNS = () => {
 
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+
+  // Fetch linked accounts on component mount
+  useEffect(() => {
+    dispatch(getLinkedAccounts());
+  }, [dispatch]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -39,40 +48,47 @@ const SNS = () => {
     }
   }, [location, dispatch]);
 
-  // Handle linking or revoking a platform account
   const handlePlatformAction = (platform) => {
     const state = platformState[platform];
     if (state.success) {
-      // If already linked, revoke the account
-      dispatch(revokePlatformAccount(platform))
-        .then(() => {
-          // Update success message
-          setSuccessMessage(`${platform.toUpperCase()} アカウントの連携を解除しました！`);
-          setErrorMessage('');
-
-          // Update URLSearchParams to remove query params
-          const updatedParams = new URLSearchParams(location.search);
-          updatedParams.delete('platform');
-          updatedParams.delete('status');
-          updatedParams.delete('platform_user_id');
-          updatedParams.delete('error');
-          navigate(`${location.pathname}?${updatedParams.toString()}`, { replace: true });
-        })
-        .catch((error) => {
-          setErrorMessage(`${platform.toUpperCase()} アカウントの連携解除に失敗しました。`);
-          setSuccessMessage('');
-        });
+      setSelectedPlatform(platform);
+      setIsModalOpen(true); // Open the modal
     } else {
-      // If not linked, link the account
       dispatch(linkPlatformAccount(platform));
     }
   };
 
-  const handleNavigateHome = () => {
-    navigate('/'); // Navigate to Home
+  const confirmRevoke = () => {
+    dispatch(revokePlatformAccount(selectedPlatform))
+      .then(() => {
+        setSuccessMessage(`${selectedPlatform.toUpperCase()} アカウントの連携を解除しました！`);
+        setErrorMessage('');
+
+        const updatedParams = new URLSearchParams(location.search);
+        updatedParams.delete('platform');
+        updatedParams.delete('status');
+        updatedParams.delete('platform_user_id');
+        updatedParams.delete('error');
+        navigate(`${location.pathname}?${updatedParams.toString()}`, { replace: true });
+      })
+      .catch(() => {
+        setErrorMessage(`${selectedPlatform.toUpperCase()} アカウントの連携解除に失敗しました。`);
+        setSuccessMessage('');
+      });
+    setIsModalOpen(false); // Close the modal
+    setSelectedPlatform(null);
   };
 
-  const LinkButton = ({ platform, label, successText }) => {
+  const cancelRevoke = () => {
+    setIsModalOpen(false); // Close the modal
+    setSelectedPlatform(null);
+  };
+
+  const handleNavigateHome = () => {
+    navigate('/');
+  };
+
+  const LinkButton = ({ platform, label }) => {
     const state = platformState[platform];
 
     return (
@@ -99,7 +115,6 @@ const SNS = () => {
 
   return (
     <section className="main-body content-login">
-      {/* Home Icon */}
       <div className="home-icon" onClick={handleNavigateHome}></div>
 
       <div className="login">
@@ -112,13 +127,20 @@ const SNS = () => {
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <form>
-          <LinkButton platform="tiktok" label="TikTok" successText="TikTok 連携済み" />
+          <LinkButton platform="tiktok" label="TikTok" />
           {platformState.tiktok.error && <p className="error-message">{platformState.tiktok.error}</p>}
 
-          <LinkButton platform="youtube" label="YouTube" successText="YouTube 連携済み" />
+          <LinkButton platform="youtube" label="YouTube" />
           {platformState.youtube.error && <p className="error-message">{platformState.youtube.error}</p>}
         </form>
       </div>
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onConfirm={confirmRevoke}
+        onCancel={cancelRevoke}
+        message="現在、連携中のアカウントを解除しますか？"
+      />
     </section>
   );
 };

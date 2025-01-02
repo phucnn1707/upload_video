@@ -5,6 +5,9 @@ import {
   REVOKE_PLATFORM_REQUEST,
   REVOKE_PLATFORM_SUCCESS,
   REVOKE_PLATFORM_FAILURE,
+  GET_LINKED_ACCOUNTS_REQUEST,
+  GET_LINKED_ACCOUNTS_SUCCESS,
+  GET_LINKED_ACCOUNTS_FAILURE,
 } from '../types';
 import apiClient from '../../services/axiosConfig';
 
@@ -50,6 +53,32 @@ export const revokePlatformAccount = (platform) => async (dispatch) => {
       payload: {
         platform,
         error: error.response?.data?.error || 'Failed to revoke account link',
+      },
+    });
+  }
+};
+
+// Fetch Linked Accounts
+export const getLinkedAccounts = () => async (dispatch) => {
+  try {
+    // Dispatch request action
+    dispatch({ type: GET_LINKED_ACCOUNTS_REQUEST });
+
+    // Call the API to fetch linked accounts
+    const response = await apiClient.get('/linked-accounts');
+    const { data } = response.data;
+
+    // Dispatch success action with fetched data
+    dispatch({
+      type: GET_LINKED_ACCOUNTS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    // Dispatch failure action with error message
+    dispatch({
+      type: GET_LINKED_ACCOUNTS_FAILURE,
+      payload: {
+        error: error.response?.data?.error || 'Failed to fetch linked accounts',
       },
     });
   }

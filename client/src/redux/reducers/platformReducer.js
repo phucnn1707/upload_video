@@ -5,6 +5,9 @@ import {
   REVOKE_PLATFORM_REQUEST,
   REVOKE_PLATFORM_SUCCESS,
   REVOKE_PLATFORM_FAILURE,
+  GET_LINKED_ACCOUNTS_REQUEST,
+  GET_LINKED_ACCOUNTS_SUCCESS,
+  GET_LINKED_ACCOUNTS_FAILURE,
 } from '../types';
 
 const initialState = {
@@ -118,6 +121,37 @@ const platformReducer = (state = loadFromLocalStorage(), action) => {
       saveToLocalStorage(updatedState);
       return updatedState;
     }
+
+    // Fetch linked accounts
+    case GET_LINKED_ACCOUNTS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case GET_LINKED_ACCOUNTS_SUCCESS:
+      const updatedState = { ...state };
+      action.payload.forEach((account) => {
+        const platformKey = account.platform.toLowerCase();
+        updatedState[platformKey] = {
+          ...updatedState[platformKey],
+          loading: false,
+          success: true,
+          userPlatformId: account.platform_user_id,
+          linkedAt: account.linked_at,
+          error: null,
+        };
+      });
+      saveToLocalStorage(updatedState);
+      return updatedState;
+
+    case GET_LINKED_ACCOUNTS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
 
     default:
       return state;
