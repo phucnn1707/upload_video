@@ -40,7 +40,7 @@ const generateText = async (req, res) => {
 
 const generateVideo = async (req, res) => {
   const { textScriptId, avatarUrl, voice_id, type } = req.body;
-  const user_id = req.user?.id; // Assuming authentication middleware sets req.user
+  const user_id = req.user?.id;
 
   // Validate required fields
   if (!textScriptId || !avatarUrl || !voice_id || !type || !user_id) {
@@ -56,7 +56,6 @@ const generateVideo = async (req, res) => {
     const textScriptDetails = await TextScriptService.getTextScriptById(textScriptId);
     const title = textScriptDetails?.title || 'Default Title';
 
-    // Step 1: Request video generation
     console.log('Requesting video generation...');
     const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type);
 
@@ -68,9 +67,8 @@ const generateVideo = async (req, res) => {
       });
     }
 
-    // Step 2: Poll for video readiness
     console.log('Polling for video readiness...');
-    const videoId = 'tlk_TrS7tW2vE1Fwibww1Z8gQ';
+    const videoId = 'tlk_UCkjO5uBx73K34ghMiZMJ';
     const videoDetails = await pollVideoStatus(videoData.id);
     // const videoDetails = await pollVideoStatus(videoId);
 
@@ -82,31 +80,30 @@ const generateVideo = async (req, res) => {
       });
     }
 
-    // Step 3: Download video and subtitles
     console.log('Downloading video and subtitles...');
     const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
     // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
 
-    // Step 4: Merge subtitles into video
+    console.log('Processing subtitles for line breaking...');
+    await processSrtFile(subtitlesPath, subtitlesPath, 15);
+
     console.log('Merging subtitles into video...');
     const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoData.id}.mp4`);
     // const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoId}.mp4`);
     await mergeSubtitlesIntoVideo(videoPath, subtitlesPath, mergedVideoPath, title);
 
-    // Step 5: Save video details to the database
     console.log('Saving video details to database...');
     const newVideo = await VideoService.createVideo({
       user_id,
       script_id: textScriptId,
-      video_url: `/public/video/merged_${videoData.id}.mp4`, // Public URL for video
-      srt_file_url: `/public/video/${videoData.id}.srt`, // Public URL for subtitles
-      // video_url: `/public/video/merged_${videoId}.mp4`, // Public URL for video
-      // srt_file_url: `/public/video/${videoId}.srt`, // Public URL for subtitles
+      video_url: `/public/video/merged_${videoData.id}.mp4`,
+      srt_file_url: `/public/video/${videoData.id}.srt`,
+      // video_url: `/public/video/merged_${videoId}.mp4`,
+      // srt_file_url: `/public/video/${videoId}.srt`,
       duration: videoDetails.duration,
-      image_url: avatarUrl, // Thumbnail image
+      image_url: avatarUrl,
     });
 
-    // Step 5: Respond with success
     res.status(200).json({
       success: true,
       message: 'AI Video generated, downloaded, and saved successfully',
@@ -127,18 +124,58 @@ const generateVideo = async (req, res) => {
   }
 };
 
-const mergeSubtitlesIntoVideo = async (videoPath, subtitlesPath, outputPath, title) => {
-  return new Promise((resolve, reject) => {
-    ffmpeg(videoPath)
-      .videoFilter([
-        `subtitles=${subtitlesPath}:force_style='FontName=Noto Sans JP,Fontsize=8,Alignment=2,MarginV=30'`,
-        `drawtext=text=${title}:fontcolor=white:fontsize=30:x=(w-text_w)/2+1:y=50:fontfile=${fontPath}`,
-      ])
-      .output(outputPath)
-      .on('end', () => resolve(outputPath))
-      .on('error', (err) => reject(err))
-      .run();
-  });
+const splitLongText = (text, maxLength = 40) => {
+  const lines = [];
+  let line = '';
+
+  for (let i = 0; i < text.length; i++) {
+    line += text[i];
+
+    if (line.length >= maxLength) {
+      lines.push(line.trim());
+      line = '';
+    }
+  }
+
+  if (line) lines.push(line.trim());
+
+  return lines.join('\n'); // Ngắt dòng bằng ký tự \n
+};
+
+const processSrtFile = (inputPath, outputPath, maxLength = 40) => {
+  try {
+    const srtContent = fs.readFileSync(inputPath, 'utf-8');
+    const srtLines = srtContent.split('\n');
+
+    let result = '';
+    let text = '';
+
+    for (const line of srtLines) {
+      if (line.match(/^\d+$/) || line.match(/\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}/)) {
+        if (text) {
+          result += `${splitLongText(text, maxLength)}\n\n`;
+          text = '';
+        }
+        result += `${line}\n`;
+      } else if (line.trim() === '') {
+        if (text) {
+          result += `${splitLongText(text, maxLength)}\n\n`;
+          text = '';
+        }
+      } else {
+        text += ` ${line.trim()}`;
+      }
+    }
+
+    if (text) {
+      result += `${splitLongText(text, maxLength)}\n`;
+    }
+
+    fs.writeFileSync(outputPath, result.trim());
+    console.log(`Processed SRT file saved to: ${outputPath}`);
+  } catch (error) {
+    console.error('Error processing SRT file:', error.message);
+  }
 };
 
 const POLLING_INTERVAL_MS = 5000;
@@ -168,30 +205,43 @@ const pollVideoStatus = async (videoId) => {
   return null; // Return null if video is not ready or URLs are missing within the retry limit
 };
 
-const MAX_DOWNLOAD_RETRIES = 5;
-const DOWNLOAD_RETRY_DELAY_MS = 3000;
-
+// Retry file download
 const retryDownloadFile = async (url, outputPath) => {
-  let attempts = 0;
+  const MAX_RETRIES = 5;
+  const RETRY_DELAY = 3000;
 
-  while (attempts < MAX_DOWNLOAD_RETRIES) {
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       await VideoGenerationService.downloadFile(url, outputPath);
       console.log(`Download succeeded: ${outputPath}`);
       return;
     } catch (error) {
-      attempts++;
-      console.warn(`Download failed (${attempts}/${MAX_DOWNLOAD_RETRIES}): ${error.message}`);
-
-      if (attempts >= MAX_DOWNLOAD_RETRIES) {
-        throw new Error(`Failed to download file after ${MAX_DOWNLOAD_RETRIES} attempts: ${url}`);
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, DOWNLOAD_RETRY_DELAY_MS));
+      console.warn(`Download failed (${attempt + 1}/${MAX_RETRIES}): ${error.message}`);
+      if (attempt === MAX_RETRIES - 1) throw error;
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
     }
   }
 };
 
+// Merge subtitles into video using FFmpeg
+const mergeSubtitlesIntoVideo = async (videoPath, srtPath, outputPath, title) => {
+  // const formattedTitle = splitLongText(title, 10).replace(/\n/g, '\\\\n').replace(/'/g, "\\'");
+  // console.log(formattedTitle);
+
+  return new Promise((resolve, reject) => {
+    ffmpeg(videoPath)
+      .videoFilter([
+        `subtitles=${srtPath}:force_style='FontName=Noto Sans JP,Fontsize=14,Alignment=2,MarginV=50'`,
+        `drawtext=text='${title}':box=1:boxcolor=black@0.5:boxborderw=10:fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50:fontfile=${fontPath}`,
+      ])
+      .output(outputPath)
+      .on('end', () => resolve(outputPath))
+      .on('error', (err) => reject(err))
+      .run();
+  });
+};
+
+// Save video and subtitles files
 const saveVideoFiles = async (videoDetails, videoId) => {
   const videoFolder = path.resolve(__dirname, '../../public/video/');
 

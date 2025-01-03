@@ -8,8 +8,8 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.generateScript?.loading);
 
-  const [desiredContent, setDesiredContent] = useState(''); // Tùy chọn
-  const [characterLimit, setCharacterLimit] = useState(''); // Tùy chọn
+  const [desiredContent, setDesiredContent] = useState('');
+  const [characterLimit, setCharacterLimit] = useState('');
 
   const handleGenerateScript = async () => {
     const options = {
@@ -62,7 +62,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                 </span>
               </div>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="col-form-label">文字数</label>
               <div className="position-relative">
                 <input
@@ -85,7 +85,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                   {characterLimit.toString().length}/5
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className="mb-4 d-flex justify-content-center">
               {loading ? (
                 <div className="loading-spinner" />

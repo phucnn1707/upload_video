@@ -49,7 +49,7 @@ function createInputPrompt(keyword, desiredContent, characterLimit) {
 
   return `
     Write an engaging and captivating script in Japanese for the keyword: "${keyword}".
-    Start with a catchy title to immediately grab attention, followed by "---", and an engaging paragraph that keeps the listener interested.
+    Start with a short and catchy title to immediately grab attention, followed by "---", and an engaging paragraph that keeps the listener interested.
     Use a conversational tone, include interesting facts or examples, and evoke curiosity or emotions relevant to the keyword.
     ${desiredContent ? `Focus on specific details or examples about: "${desiredContent}".` : ''}
     ${durationInstruction}
