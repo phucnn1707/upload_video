@@ -36,4 +36,23 @@ const getApiKeyByServiceName = async (req, res) => {
   }
 };
 
-module.exports = { createApiKey, getAllApiKeys, getApiKeyByServiceName };
+const updateApiKeyByServiceName = async (req, res) => {
+  const { serviceName } = req.params;
+  const { apiKey } = req.body;
+
+  try {
+    const updatedApiKey = await apiKeyService.updateApiKeyByServiceName(serviceName, apiKey);
+    return res.status(200).json({
+      success: true,
+      message: 'API Key updated successfully',
+      data: updatedApiKey,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { createApiKey, getAllApiKeys, getApiKeyByServiceName, updateApiKeyByServiceName };

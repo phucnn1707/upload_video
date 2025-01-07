@@ -7,12 +7,18 @@ import searchApiKeyIcon from '../assets/images/key.png';
 import viewIcon from '../assets/images/view.png';
 import hideIcon from '../assets/images/hide.png';
 import { fetchLinkedAccounts } from '../redux/actions/accountAction';
-import { fetchApiKeyByServiceName } from '../redux/actions/apiKeyAction';
+import { toast } from 'react-toastify';
+import {
+  createApiKeyByServiceName,
+  fetchApiKeyByServiceName,
+  updateApiKeyByServiceName,
+} from '../redux/actions/apiKeyAction';
 
 const Account = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [localApiKey, setLocalApiKey] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const { accounts = [], loading: accountsLoading, error: accountsError } = useSelector((state) => state.account);
@@ -22,6 +28,12 @@ const Account = () => {
     dispatch(fetchLinkedAccounts());
     dispatch(fetchApiKeyByServiceName('searchapi'));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (searchApiKey) {
+      setLocalApiKey(searchApiKey);
+    }
+  }, [searchApiKey]);
 
   const getAccountByPlatform = (platform) =>
     accounts.find((account) => account.platform.toLowerCase() === platform.toLowerCase());
@@ -37,17 +49,39 @@ const Account = () => {
     navigate('/sns');
   };
 
-  if (accountsLoading || apiKeyLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleApiKeyChange = (event) => {
+    setLocalApiKey(event.target.value);
+  };
 
-  if (accountsError) {
-    return <div>Error fetching accounts: {accountsError}</div>;
-  }
+  const handleSaveApiKey = async () => {
+    if (!localApiKey) {
+      toast.error('API キーは空にできません。');
+      return;
+    }
+    try {
+      if (searchApiKey) {
+        await dispatch(updateApiKeyByServiceName('searchapi', localApiKey));
+        toast.success('API キーが正常に更新されました！');
+      } else {
+        await dispatch(createApiKeyByServiceName('searchapi', localApiKey));
+        toast.success('API キーが正常に作成されました！');
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message || 'API キーの保存に失敗しました。'}`);
+    }
+  };
 
-  if (apiKeyError) {
-    return <div>Error fetching API Key: {apiKeyError}</div>;
-  }
+  // if (accountsLoading || apiKeyLoading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (accountsError) {
+  //   return <div>Error fetching accounts: {accountsError}</div>;
+  // }
+
+  // if (apiKeyError) {
+  //   return <div>Error fetching API Key: {apiKeyError}</div>;
+  // }
 
   return (
     <div className="container account">
@@ -132,7 +166,8 @@ const Account = () => {
                 type={isPasswordVisible ? 'text' : 'password'}
                 className="input-api-key"
                 placeholder="APIキーを入力してください"
-                value={searchApiKey || ''}
+                value={localApiKey}
+                onChange={handleApiKeyChange}
               />
               <span
                 className="toggle-visibility"
@@ -142,6 +177,9 @@ const Account = () => {
                 <img src={isPasswordVisible ? hideIcon : viewIcon} alt={isPasswordVisible ? 'Hide' : 'Show'} />
               </span>
             </div>
+            <button className="btn-register" type="button" onClick={handleSaveApiKey}>
+              登録
+            </button>
           </div>
         </div>
       </div>

@@ -2471,12 +2471,6 @@ a.button.btn-youtube::after {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Add additional focus styling for accessibility */
-.blockAccInfo .info .btn-register:focus {
-  outline: 2px solid #ff5722;
-  outline-offset: 2px;
-}
-
 .blockAccInfo .acc-change {
   font-weight: 600;
   background: url(./assets/images/ico-change.svg) no-repeat left center;

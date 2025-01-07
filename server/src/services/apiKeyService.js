@@ -27,4 +27,25 @@ const getApiKeyByServiceName = async (serviceName) => {
   });
 };
 
-module.exports = { createApiKey, getAllApiKeys, getApiKeyByServiceName };
+const updateApiKeyByServiceName = async (serviceName, apiKey) => {
+  if (!serviceName || !apiKey) {
+    throw new Error('Service name and API Key are required');
+  }
+
+  const [updatedRowsCount, updatedRows] = await ApiKey.update(
+    { api_key: apiKey },
+    {
+      where: { service_name: serviceName },
+      returning: true,
+      plain: true,
+    }
+  );
+
+  if (updatedRowsCount === 0) {
+    throw new Error('Service name not found');
+  }
+
+  return updatedRows;
+};
+
+module.exports = { createApiKey, getAllApiKeys, getApiKeyByServiceName, updateApiKeyByServiceName };
