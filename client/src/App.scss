@@ -2316,6 +2316,10 @@ a.button.btn-youtube::after {
   height: 30px;
 }
 
+.blockAccInfo .name .ico-searchapi img {
+  height: 30px;
+}
+
 .blockAccInfo .name .txt {
   font-weight: 600;
 }
@@ -2336,6 +2340,141 @@ a.button.btn-youtube::after {
   max-width: 440px;
   width: 100%;
   padding-left: 38px;
+}
+
+/* Wrapper for input and eye icon */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.input-wrapper .input-api-key {
+  width: 100%;
+  height: 40px;
+  padding: 8px 40px 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.input-wrapper .input-api-key:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+  background-color: #f9fff9; /* Light green background when focused */
+  outline: none;
+}
+
+.input-wrapper .toggle-visibility {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  width: 24px; /* Increased for better clickability */
+  height: 24px;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.input-wrapper .toggle-visibility:hover {
+  opacity: 0.8;
+  transform: scale(1.2); /* Slightly enlarge icon on hover for better UX */
+}
+
+.input-wrapper .toggle-visibility:active {
+  transform: scale(0.95); /* Shrink slightly when clicked */
+}
+
+/* Wrapper for Get API Link */
+.get-api-link {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 12px; /* Adjusted for better spacing */
+  transition:
+    color 0.3s ease,
+    text-decoration 0.3s ease;
+}
+
+.get-api-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.get-api-link .icon-get-link {
+  width: 18px; /* Slightly larger for better visibility */
+  height: 18px;
+  margin-right: 6px;
+}
+
+/* Tooltip Styling */
+.get-api-link[title] {
+  position: relative;
+}
+
+.get-api-link[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000; /* Changed to black for better contrast */
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px; /* Increased padding for readability */
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0.9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Styled button */
+.blockAccInfo .info .btn-register {
+  padding: 12px 26px; /* Adjusted for better clickability */
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(90deg, #ff5722 0%, #e91e63 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.blockAccInfo .info .btn-register:hover {
+  background: linear-gradient(90deg, #e91e63 0%, #ff5722 100%);
+  transform: translateY(-3px); /* Slight lift effect on hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.blockAccInfo .info .btn-register:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add additional focus styling for accessibility */
+.blockAccInfo .info .btn-register:focus {
+  outline: 2px solid #ff5722;
+  outline-offset: 2px;
 }
 
 .blockAccInfo .acc-change {

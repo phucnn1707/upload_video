@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateScript, resetGenerateScript } from '../redux/actions/generateScriptActions';
-import { createTextScript } from '../redux/actions/textScriptActions';
+import { generateScript, resetGenerateScript } from '../redux/actions/generateScriptAction';
+import { createTextScript } from '../redux/actions/textScriptAction';
 import { toast } from 'react-toastify';
 
 const GenerateScriptModal = ({ block, onClose, onProceed }) => {

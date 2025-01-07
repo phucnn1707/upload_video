@@ -8,6 +8,7 @@ import { avatarReducer } from './avatarReducer';
 import generateVideoReducer from './generateVideoReducer';
 import platformReducer from './platformReducer';
 import accountReducer from './accountReducer';
+import apiKeyReducer from './apiKeyReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   generateVideo: generateVideoReducer,
   platform: platformReducer,
   account: accountReducer,
+  apiKey: apiKeyReducer,
 });
 
 export default rootReducer;
