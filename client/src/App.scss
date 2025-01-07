@@ -2445,7 +2445,8 @@ a.button.btn-youtube::after {
 
 /* Styled button */
 .blockAccInfo .info .btn-register {
-  padding: 12px 26px; /* Adjusted for better clickability */
+  padding: 12px 26px;
+  margin-left: 1rem;
   font-size: 16px;
   font-weight: bold;
   color: #fff;
@@ -2458,6 +2459,7 @@ a.button.btn-youtube::after {
     background 0.3s ease,
     transform 0.2s ease,
     box-shadow 0.3s ease;
+  white-space: nowrap;
 }
 
 .blockAccInfo .info .btn-register:hover {
