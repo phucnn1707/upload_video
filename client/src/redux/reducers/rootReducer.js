@@ -9,6 +9,7 @@ import generateVideoReducer from './generateVideoReducer';
 import platformReducer from './platformReducer';
 import accountReducer from './accountReducer';
 import apiKeyReducer from './apiKeyReducer';
+import apiTrendReducer from './apiTrendReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   platform: platformReducer,
   account: accountReducer,
   apiKey: apiKeyReducer,
+  apiTrend: apiTrendReducer,
 });
 
 export default rootReducer;

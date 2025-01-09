@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import TrendList from '../components/List_Trend';
 import { fetchTrends } from '../redux/actions/trendAction';
 import CreateScriptModal from '../components/CreateScriptModal';
+import { getTrend } from '../redux/actions/apiTrendAction';
 
 const CreateScript = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const CreateScript = () => {
   const [selectedTrend, setSelectedTrend] = useState(null);
 
   useEffect(() => {
+    dispatch(getTrend());
     dispatch(fetchTrends());
   }, [dispatch]);
 

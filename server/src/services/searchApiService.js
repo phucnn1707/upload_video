@@ -47,13 +47,13 @@ const createKeywords = async (keywords, platform) => {
 };
 
 // Google Trends function
-const fetchGoogleTrends = async () => {
+const fetchGoogleTrends = async (api_key) => {
   try {
     const params = {
       engine: 'google_trends_trending_daily',
       geo: 'JP',
       date: strDate,
-      api_key: API_KEY,
+      api_key: api_key,
     };
 
     const response = await axios.get(SEARCH_API_URL, { params });
@@ -72,13 +72,13 @@ const fetchGoogleTrends = async () => {
 };
 
 // YouTube Trends function
-const fetchYouTubeTrends = async () => {
+const fetchYouTubeTrends = async (api_key) => {
   try {
     const params = {
       engine: 'youtube_trends',
       gl: 'JP',
       hl: 'ja',
-      api_key: API_KEY,
+      api_key: api_key,
     };
 
     const response = await axios.get(SEARCH_API_URL, { params });
