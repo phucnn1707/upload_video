@@ -2,9 +2,18 @@ const apiKeyService = require('../services/apiKeyService');
 
 const createApiKey = async (req, res) => {
   const { service_name, api_key } = req.body;
+  const user_id = req.user?.id;
+
+  if (!user_id || !service_name || !api_key) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required fields: user_id, service_name, api_key',
+      data: null,
+    });
+  }
 
   try {
-    const apiKey = await apiKeyService.createApiKey(service_name, api_key);
+    const apiKey = await apiKeyService.createApiKey(user_id, service_name, api_key);
     res.status(201).json({ success: true, message: 'API Key created successfully', data: apiKey });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
