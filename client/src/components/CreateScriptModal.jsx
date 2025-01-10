@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateScript, resetGenerateScript } from '../redux/actions/generateScriptActions';
-import { createTextScript } from '../redux/actions/textScriptActions';
+import { generateScript, resetGenerateScript } from '../redux/actions/generateScriptAction';
+import { createTextScript } from '../redux/actions/textScriptAction';
 import { toast } from 'react-toastify';
 
 const GenerateScriptModal = ({ block, onClose, onProceed }) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.generateScript?.loading);
 
-  const [desiredContent, setDesiredContent] = useState(''); // Tùy chọn
-  const [characterLimit, setCharacterLimit] = useState(''); // Tùy chọn
+  const [desiredContent, setDesiredContent] = useState('');
+  const [characterLimit, setCharacterLimit] = useState('');
 
   const handleGenerateScript = async () => {
     const options = {
@@ -62,7 +62,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                 </span>
               </div>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="col-form-label">文字数</label>
               <div className="position-relative">
                 <input
@@ -85,7 +85,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                   {characterLimit.toString().length}/5
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className="mb-4 d-flex justify-content-center">
               {loading ? (
                 <div className="loading-spinner" />

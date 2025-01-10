@@ -21,7 +21,7 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
   };
 
   // Determine the button states
-  const isSuccess = isUploaded || videoUploadState.success; // Whether the video is already uploaded or upload succeeded
+  const isSuccess = isUploaded || videoUploadState.success;
 
   return (
     <div className="blockVideo">

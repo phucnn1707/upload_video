@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTextScripts } from '../redux/actions/textScriptActions';
+import { fetchTextScripts } from '../redux/actions/textScriptAction';
 import BlockAiList from '../components/List_BlockAi';
 import { fetchAvatars } from '../redux/actions/avatarAction';
 import DatePicker from 'react-datepicker';

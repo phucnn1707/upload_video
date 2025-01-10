@@ -1,4 +1,4 @@
-import apiClient from '../../services/axiosConfig';
+import apiClient from '../../services/axiosConfig.js';
 import {
   FETCH_TEXTSCRIPTS_REQUEST,
   FETCH_TEXTSCRIPTS_SUCCESS,

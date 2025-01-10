@@ -7,7 +7,7 @@ import {
   handleOAuthSuccess,
   handleOAuthFailure,
   getLinkedAccounts,
-} from '../redux/actions/platformActions';
+} from '../redux/actions/platformAction';
 import ConfirmationModal from '../components/ConfirmationModal';
 
 const SNS = () => {
