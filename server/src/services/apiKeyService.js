@@ -1,7 +1,11 @@
 const db = require('../models');
 const { ApiKey } = db;
 
-const createApiKey = async (serviceName, apiKey) => {
+const createApiKey = async (userId, serviceName, apiKey) => {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
   if (!serviceName) {
     throw new Error('Service name is required');
   }
@@ -10,7 +14,7 @@ const createApiKey = async (serviceName, apiKey) => {
     throw new Error('API key is required');
   }
 
-  return await ApiKey.create({ service_name: serviceName, api_key: apiKey });
+  return await ApiKey.create({ user_id: userId, service_name: serviceName, api_key: apiKey });
 };
 
 const getAllApiKeys = async () => {
