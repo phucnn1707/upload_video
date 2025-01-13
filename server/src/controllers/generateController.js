@@ -68,7 +68,7 @@ const generateVideo = async (req, res) => {
     }
 
     console.log('Polling for video readiness...');
-    const videoId = 'tlk_UCkjO5uBx73K34ghMiZMJ';
+    const videoId = 'tlk_vljZHaOLyyQYe3iwhQUyK';
     const videoDetails = await pollVideoStatus(videoData.id);
     // const videoDetails = await pollVideoStatus(videoId);
 
@@ -139,7 +139,7 @@ const splitLongText = (text, maxLength = 40) => {
 
   if (line) lines.push(line.trim());
 
-  return lines.join('\n'); // Ngắt dòng bằng ký tự \n
+  return lines.join('\n');
 };
 
 const processSrtFile = (inputPath, outputPath, maxLength = 40) => {
