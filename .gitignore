@@ -20,9 +20,9 @@ client/logs/
 server/logs/
 
 # Ignore package lock files
-package-lock.json
-client/package-lock.json
-server/package-lock.json
+# package-lock.json
+# client/package-lock.json
+# server/package-lock.json
 
 # Ignore public/static files (optional if needed)
 client/public/
