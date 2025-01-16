@@ -2496,6 +2496,15 @@ a.button.btn-youtube::after {
   .blockVideoList {
     gap: 6% 2%;
   }
+
+  .blockContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+  }
 }
 
 @media all and (max-width: 640px) {
@@ -2505,7 +2514,11 @@ a.button.btn-youtube::after {
 }
 
 .blockVideo {
-  max-width: 196px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 250px;
 }
 
 @media all and (max-width: 960px) {
@@ -2539,12 +2552,11 @@ a.button.btn-youtube::after {
 }
 
 .blockVideo button {
-  width: 100px;
+  width: 90px;
   height: 38px;
   border-radius: 100px;
   font-weight: bold;
-  margin-top: 25px;
-  box-shadow: none;
+  margin-top: 15px;
 }
 
 .blockVideo button.btn-posted {
@@ -2572,6 +2584,7 @@ a.button.btn-youtube::after {
 
 .hoverable-name {
   transition: opacity 0.3s ease;
+  text-align: center;
 }
 
 .hoverable-name:hover {
@@ -3762,4 +3775,31 @@ input[type='number'] {
 .btn-cancel:hover {
   background: #b3b3b3;
   transform: scale(1.05);
+}
+
+.blockVideo .button-group {
+  display: flex;
+  margin-top: 10px;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.blockVideo .btn-secondary {
+  max-width: 70px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  border-radius: 100px;
+  cursor: pointer;
+  background: #680079;
+  background: -webkit-linear-gradient(left, #680079 0%, #047eb2 100%);
+  background: linear-gradient(90deg, #680079 0%, #047eb2 100%);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.blockVideo .btn-post,
+.blockVideo .btn-uploaded {
+  padding: 8px 16px;
+  font-size: 14px;
 }
