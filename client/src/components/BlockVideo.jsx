@@ -4,7 +4,6 @@ import imageVideo from '../assets/images/dummy2.png';
 import { uploadVideo } from '../redux/actions/videoAction';
 import { toast } from 'react-toastify';
 import Modal from 'react-modal';
-import fs from 'fs';
 
 const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => {
   const dispatch = useDispatch();
