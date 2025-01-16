@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import imageVideo from '../assets/images/dummy2.png';
 import { uploadVideo } from '../redux/actions/videoAction';
 import { toast } from 'react-toastify';
-import Modal from 'react-modal';
+// import Modal from 'react-modal';
 
 const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => {
   const dispatch = useDispatch();
@@ -15,36 +15,36 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
   const [isSubtitleModalOpen, setIsSubtitleModalOpen] = useState(false);
   const [subtitleContent, setSubtitleContent] = useState('');
 
-  // Handle opening the subtitle modal
-  const openSubtitleModal = async () => {
-    const filePath = `${process.env.PUBLIC_URL}/video/${videoId}.srt`;
+  // // Handle opening the subtitle modal
+  // const openSubtitleModal = async () => {
+  //   const filePath = `${process.env.PUBLIC_URL}/video/${videoId}.srt`;
 
-    try {
-      const response = await fetch(filePath);
-      if (!response.ok) throw new Error('Subtitle file not found');
-      const text = await response.text();
-      setSubtitleContent(text);
-      setIsSubtitleModalOpen(true);
-    } catch (error) {
-      toast.error('字幕ファイルの読み込みに失敗しました。');
-    }
-  };
+  //   try {
+  //     const response = await fetch(filePath);
+  //     if (!response.ok) throw new Error('Subtitle file not found');
+  //     const text = await response.text();
+  //     setSubtitleContent(text);
+  //     setIsSubtitleModalOpen(true);
+  //   } catch (error) {
+  //     toast.error('字幕ファイルの読み込みに失敗しました。');
+  //   }
+  // };
 
-  // Handle saving the edited subtitle
-  const saveSubtitle = async () => {
-    try {
-      // Simulate saving the file (replace this part with an API call if needed)
-      const blob = new Blob([subtitleContent], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${videoId}.srt`;
-      link.click();
-      toast.success('字幕ファイルを保存しました！');
-      setIsSubtitleModalOpen(false);
-    } catch (error) {
-      toast.error('字幕ファイルの保存に失敗しました。');
-    }
-  };
+  // // Handle saving the edited subtitle
+  // const saveSubtitle = async () => {
+  //   try {
+  //     // Simulate saving the file (replace this part with an API call if needed)
+  //     const blob = new Blob([subtitleContent], { type: 'text/plain' });
+  //     const link = document.createElement('a');
+  //     link.href = URL.createObjectURL(blob);
+  //     link.download = `${videoId}.srt`;
+  //     link.click();
+  //     toast.success('字幕ファイルを保存しました！');
+  //     setIsSubtitleModalOpen(false);
+  //   } catch (error) {
+  //     toast.error('字幕ファイルの保存に失敗しました。');
+  //   }
+  // };
 
   // Handle the upload button click
   const handlePost = async () => {
@@ -73,7 +73,11 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
       <div className="date">{date}</div>
       {/* Buttons in a row */}
       <div className="button-group">
-        <button className="btn-secondary btn-subtitle" type="button" onClick={openSubtitleModal}>
+        <button
+          className="btn-secondary btn-subtitle"
+          type="button"
+          onClick={() => toast.info('結合機能は現在準備中です。')}
+        >
           字幕
         </button>
         <button
@@ -93,7 +97,7 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
         </button>
       </div>
 
-      {/* Subtitle Modal */}
+      {/* Subtitle Modal
       <Modal
         isOpen={isSubtitleModalOpen}
         onRequestClose={() => setIsSubtitleModalOpen(false)}
@@ -116,7 +120,7 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
             保存
           </button>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
