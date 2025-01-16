@@ -35,6 +35,7 @@ const getYouTubeTrendingKeywords = (data) => {
 };
 
 const createKeywords = async (keywords, platform) => {
+  console.log('trending_date', date);
   const keywordEntries = keywords.map((keyword) => ({
     platform,
     keyword: keyword.replace(/\s+/g, ''),
