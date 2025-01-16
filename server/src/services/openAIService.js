@@ -42,20 +42,35 @@ async function generateTextFromKeyword(keyword, options = {}) {
   }
 }
 
-function createInputPrompt(keyword, desiredContent, characterLimit) {
-  const durationInstruction = characterLimit
-    ? `Create engaging content close to ${characterLimit} characters but do not exceed this limit.`
-    : `The content should be suitable for spoken delivery in under 60 seconds.`;
+function createInputPrompt(keyword, userDescription, temp) {
+  const defaultInstruction = `
+    Write a creative, engaging, and dynamic script that resonates with a Japanese audience. 
+    Focus on delivering a memorable and impactful message about the keyword: "${keyword}".
+  `.trim();
 
+  const instruction = userDescription && userDescription.trim() ? userDescription.trim() : defaultInstruction;
+
+  // Prompt
   return `
-    Write an engaging and captivating script in Japanese for the keyword: "${keyword}".
-    Start with a short and catchy title to immediately grab attention, followed by "---", and an engaging paragraph that keeps the listener interested.
-    Use a conversational tone, include interesting facts or examples, and evoke curiosity or emotions relevant to the keyword.
-    ${desiredContent ? `Focus on specific details or examples about: "${desiredContent}".` : ''}
-    ${durationInstruction}
-    Ensure the content is dynamic, easy to understand, and leaves a strong impression on the listener.
-    Avoid complex sentences; use clear and impactful language to make the message memorable.
-    Return the result in a single paragraph with no line breaks or formatting.
+    Act like a professional scriptwriter with expertise in creating captivating Japanese scripts for diverse audiences.
+    Your goal is to create an engaging and dynamic script for the keyword: "${keyword}".
+
+    User's Custom Instructions:
+    - ${instruction}
+
+    Requirements:
+    1. Start with a short and captivating title in Japanese that immediately grabs attention.
+    2. Follow the title with "---" and write a single, cohesive paragraph:
+       - Use a conversational tone and include elements that resonate with the audience.
+       - Ensure the output aligns with the user's description provided above.
+
+    Writing Guidelines:
+    - Use clear, impactful, and easy-to-understand language.
+    - Avoid unnecessary complexity while ensuring emotional and intellectual depth.
+    - Make the content memorable and leave a strong impression.
+
+    Output Format:
+    - Return the result as a single cohesive paragraph with no line breaks or unnecessary formatting.
   `.trim();
 }
 

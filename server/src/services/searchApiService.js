@@ -8,7 +8,9 @@ const SEARCH_API_URL = process.env.SEARCH_API_URL;
 
 const date = new Date();
 date.setHours(0, 0, 0, 0);
-const strDate = date.toISOString().slice(0, 10).replace(/-/g, '');
+const apiDate = new Date();
+apiDate.setHours(0, 0, 0, 0);
+const strDate = apiDate.toISOString().slice(0, 10).replace(/-/g, '');
 
 const getGoogleTrendingKeywords = (data) => {
   const trendingKeywords = [];

@@ -22,15 +22,7 @@ export const fetchVideos = () => async (dispatch) => {
 export const uploadVideo = (videoId) => async (dispatch) => {
   dispatch({ type: UPLOAD_VIDEO_REQUEST, payload: { videoId } });
   try {
-    const response = await apiClient.post(
-      `/youtube/upload/${videoId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace with your auth mechanism
-        },
-      }
-    );
+    const response = await apiClient.post(`/youtube/upload/${videoId}`);
 
     dispatch({
       type: UPLOAD_VIDEO_SUCCESS,

@@ -9,6 +9,7 @@ const avatarRoutes = require('./avatarRoutes');
 const linkedAccountRoutes = require('./linkedAccountRoutes');
 const youtubeRoutes = require('./youtubeRoutes');
 const apiKeyRoutes = require('./apiKeyRoutes');
+const subRoutes = require('./subRoutes');
 
 /**
  * Initializes all API routes with modular grouping under /api/v1.
@@ -28,6 +29,7 @@ const initApiRoutes = (app) => {
   apiRouter.use('/linked-accounts', linkedAccountRoutes);
   apiRouter.use('/youtube', youtubeRoutes);
   apiRouter.use('/apikeys', apiKeyRoutes);
+  apiRouter.use('/subtitle', subRoutes);
 
   app.use('/api/v1', apiRouter); // Apply the grouped router to /api/v1
 
