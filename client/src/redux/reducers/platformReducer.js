@@ -132,6 +132,12 @@ const platformReducer = (state = loadFromLocalStorage(), action) => {
 
     case GET_LINKED_ACCOUNTS_SUCCESS:
       const updatedState = { ...state };
+
+      if (action.payload.length === 0) {
+        saveToLocalStorage(initialState);
+        return initialState;
+      }
+
       action.payload.forEach((account) => {
         const platformKey = account.platform.toLowerCase();
         updatedState[platformKey] = {
