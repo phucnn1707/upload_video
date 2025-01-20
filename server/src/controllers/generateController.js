@@ -1,4 +1,5 @@
 const OpenAIService = require('../services/openAIService');
+const geminiAIService = require('../services/geminiAIService');
 const VideoGenerationService = require('../services/videoGenerationService');
 const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
@@ -18,7 +19,7 @@ const generateText = async (req, res) => {
 
   try {
     // Generate text using OpenAI service
-    const response = await OpenAIService.generateTextFromKeyword(keyword, options);
+    const response = await geminiAIService.generateTextFromKeyword(keyword, options);
     const { generatedTitle, generatedText } = response;
 
     // Return success response
