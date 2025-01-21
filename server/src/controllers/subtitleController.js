@@ -6,14 +6,14 @@ const getSubtitle = async (req, res) => {
   const fileUrl = req.query.url;
 
   if (!fileUrl) {
-    return res.status(400).json({ message: 'File URL is required' });
+    return res.status(400).json({ success: false, message: 'File URL is required' });
   }
 
   try {
     const content = await fetchSubtitleContent(fileUrl);
-    return res.status(200).json({ content });
+    return res.status(200).json({ success: true, content });
   } catch (error) {
-    return res.status(500).json({ message: 'An error occurred', error: error.message });
+    return res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
   }
 };
 
@@ -23,25 +23,25 @@ const updateSubtitle = async (req, res) => {
     const filePath = req.query.filePath;
 
     if (!content) {
-      return res.status(400).json({ message: 'Content is required' });
+      return res.status(400).json({ success: false, message: 'Content is required' });
     }
 
     if (!filePath) {
-      return res.status(400).json({ message: 'File path is required' });
+      return res.status(400).json({ success: false, message: 'File path is required' });
     }
 
     const srt_file_url = path.join(__dirname, '/..', '/..', '' + filePath);
 
     if (!fs.existsSync(srt_file_url)) {
-      return res.status(404).json({ message: 'File not found' });
+      return res.status(404).json({ success: false, message: 'File not found' });
     }
 
     await updateSubtitleContent(content, srt_file_url);
 
-    return res.status(200).json({ message: 'Subtitle updated successfully' });
+    return res.status(200).json({ success: true, message: 'Subtitle updated successfully' });
   } catch (error) {
     console.error('Error updating subtitle in controller:', error);
-    return res.status(500).json({ message: 'An error occurred', error: error.message });
+    return res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
   }
 };
 

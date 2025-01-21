@@ -5,13 +5,17 @@ import {
   UPLOAD_VIDEO_REQUEST,
   UPLOAD_VIDEO_SUCCESS,
   UPLOAD_VIDEO_FAILURE,
+  MERGE_VIDEO_REQUEST,
+  MERGE_VIDEO_SUCCESS,
+  MERGE_VIDEO_FAILURE,
 } from '../types';
 
 const initialState = {
   loading: false,
   data: [],
   error: null,
-  uploads: {},
+  uploads: {}, // Quản lý trạng thái upload
+  merges: {}, // Quản lý trạng thái merge video
 };
 
 const videoReducer = (state = initialState, action) => {
@@ -45,6 +49,36 @@ const videoReducer = (state = initialState, action) => {
         ...state,
         uploads: {
           ...state.uploads,
+          [action.payload.videoId]: {
+            loading: false,
+            success: false,
+            error: action.payload.error,
+          },
+        },
+      };
+
+    // Merge video
+    case MERGE_VIDEO_REQUEST:
+      return {
+        ...state,
+        merges: {
+          ...state.merges,
+          [action.payload.videoId]: { loading: true, success: false, error: null },
+        },
+      };
+    case MERGE_VIDEO_SUCCESS:
+      return {
+        ...state,
+        merges: {
+          ...state.merges,
+          [action.payload.videoId]: { loading: false, success: true, error: null },
+        },
+      };
+    case MERGE_VIDEO_FAILURE:
+      return {
+        ...state,
+        merges: {
+          ...state.merges,
           [action.payload.videoId]: {
             loading: false,
             success: false,
