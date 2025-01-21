@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BlockVideo from './BlockVideo';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
@@ -9,6 +11,16 @@ const formatDate = (dateString) => {
 };
 
 const BlockVideoList = ({ videos, onVideoSelect }) => {
+  const { saveSuccess, error } = useSelector((state) => state.subtitle);
+
+  useEffect(() => {
+    if (saveSuccess) {
+      toast.success('字幕が保存されました！');
+    } else if (error) {
+      toast.error('字幕データの取得に失敗しました。');
+    }
+  }, [saveSuccess, error]);
+
   if (!videos || videos.length === 0) {
     return (
       <div className="blockContent blockVideoList">
@@ -28,6 +40,10 @@ const BlockVideoList = ({ videos, onVideoSelect }) => {
           isPosted={video.is_uploaded}
           isUploaded={video.is_uploaded}
           onClick={() => onVideoSelect(video)}
+          subTitleURL={video.srt_file_url}
+          textScriptId={video.script_id}
+          videoPath={video.video_url}
+          srtPath={video.srt_file_url}
         />
       ))}
     </div>

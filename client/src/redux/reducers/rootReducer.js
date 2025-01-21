@@ -10,6 +10,7 @@ import platformReducer from './platformReducer';
 import accountReducer from './accountReducer';
 import apiKeyReducer from './apiKeyReducer';
 import apiTrendReducer from './apiTrendReducer';
+import subtitleReducer from './subtitleReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   account: accountReducer,
   apiKey: apiKeyReducer,
   apiTrend: apiTrendReducer,
+  subtitle: subtitleReducer,
 });
 
 export default rootReducer;

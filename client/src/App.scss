@@ -3803,3 +3803,105 @@ input[type='number'] {
   padding: 8px 16px;
   font-size: 14px;
 }
+
+.modalSubtitle-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.modalSubtitle-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modalSubtitle-content {
+  background: #fff;
+  color: #333;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modalSubtitle-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.modalSubtitle-close:hover {
+  color: #ff4d4f;
+}
+
+.modalSubtitle-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modalSubtitle-textarea {
+  width: 100%;
+  height: 60vh;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  resize: none;
+  color: #000;
+  background-color: #fff;
+}
+
+.modalSubtitle-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-subtitle-cancel {
+  background: #ccc;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-subtitle-cancel:hover {
+  background: #b3b3b3;
+}
+
+.btn-subtitle-save {
+  background: linear-gradient(90deg, #680079 0%, #047eb2 100%);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-subtitle-save:hover {
+  background: linear-gradient(90deg, #047eb2 0%, #680079 100%);
+}

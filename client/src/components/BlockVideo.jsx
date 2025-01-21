@@ -1,52 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import imageVideo from '../assets/images/dummy2.png';
-import { uploadVideo } from '../redux/actions/videoAction';
+import { uploadVideo, mergeVideo, fetchVideos } from '../redux/actions/videoAction';
+import { fetchSubtitle, saveSubtitle, clearSubtitle } from '../redux/actions/subtitleActions';
 import { toast } from 'react-toastify';
-// import Modal from 'react-modal';
+import SubtitleEditorModal from './SubtitleEditorModal';
 
-const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => {
+const BlockVideo = ({
+  thumbnail,
+  name,
+  date,
+  videoId,
+  isUploaded,
+  onClick,
+  subTitleURL,
+  videoPath,
+  srtPath,
+  textScriptId,
+}) => {
   const dispatch = useDispatch();
 
-  // Fetch the upload state of the video from Redux
+  // Fetch states from Redux
+  const { subtitle, loading: subtitleLoading } = useSelector((state) => state.subtitle);
   const videoUploadState = useSelector((state) => state.videos.uploads[videoId] || {});
+  const videoMergeState = useSelector((state) => state.videos.merges[videoId] || {});
 
-  // Local state for subtitle modal
-  const [isSubtitleModalOpen, setIsSubtitleModalOpen] = useState(false);
-  const [subtitleContent, setSubtitleContent] = useState('');
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [editedSubtitle, setEditedSubtitle] = useState('');
 
-  // // Handle opening the subtitle modal
-  // const openSubtitleModal = async () => {
-  //   const filePath = `${process.env.PUBLIC_URL}/video/${videoId}.srt`;
+  // Open modal and fetch subtitle
+  const openSubtitleModal = async () => {
+    setModalOpen(true);
+    const response = await dispatch(fetchSubtitle(subTitleURL)); // API call
+    if (response) {
+      setEditedSubtitle(response);
+    }
+  };
 
-  //   try {
-  //     const response = await fetch(filePath);
-  //     if (!response.ok) throw new Error('Subtitle file not found');
-  //     const text = await response.text();
-  //     setSubtitleContent(text);
-  //     setIsSubtitleModalOpen(true);
-  //   } catch (error) {
-  //     toast.error('字幕ファイルの読み込みに失敗しました。');
-  //   }
-  // };
+  // Sync Redux subtitle to local state for editing
+  useEffect(() => {
+    if (subtitle) {
+      setEditedSubtitle(subtitle);
+    }
+  }, [subtitle]);
 
-  // // Handle saving the edited subtitle
-  // const saveSubtitle = async () => {
-  //   try {
-  //     // Simulate saving the file (replace this part with an API call if needed)
-  //     const blob = new Blob([subtitleContent], { type: 'text/plain' });
-  //     const link = document.createElement('a');
-  //     link.href = URL.createObjectURL(blob);
-  //     link.download = `${videoId}.srt`;
-  //     link.click();
-  //     toast.success('字幕ファイルを保存しました！');
-  //     setIsSubtitleModalOpen(false);
-  //   } catch (error) {
-  //     toast.error('字幕ファイルの保存に失敗しました。');
-  //   }
-  // };
+  const closeSubtitleModal = () => {
+    setModalOpen(false);
+    dispatch(clearSubtitle());
+  };
 
-  // Handle the upload button click
+  // Save subtitle
+  const handleSaveSubtitle = async () => {
+    await dispatch(saveSubtitle(subTitleURL, editedSubtitle));
+    closeSubtitleModal();
+  };
+
+  // Merge video and subtitles
+  const handleMerge = async () => {
+    try {
+      await dispatch(mergeVideo(videoId, videoPath, srtPath, textScriptId));
+      toast.success('動画の結合が完了しました！');
+      await dispatch(fetchVideos());
+    } catch (error) {
+      toast.error(error.message || '動画の結合に失敗しました。');
+    }
+  };
+
   const handlePost = async () => {
     try {
       await dispatch(uploadVideo(videoId));
@@ -56,36 +75,28 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
     }
   };
 
-  // Determine the button states
   const isSuccess = isUploaded || videoUploadState.success;
 
   return (
     <div className="blockVideo">
       <div>
-        {/* Thumbnail area with click event */}
         <div className="thumbs" onClick={onClick}>
           <img src={thumbnail || imageVideo} alt="" className="hoverable-img" />
         </div>
-        {/* Video name */}
         <div className="name hoverable-name">{name}</div>
       </div>
-      {/* Upload date */}
       <div className="date">{date}</div>
-      {/* Buttons in a row */}
       <div className="button-group">
-        <button
-          className="btn-secondary btn-subtitle"
-          type="button"
-          onClick={() => toast.info('結合機能は現在準備中です。')}
-        >
+        <button className="btn-secondary btn-subtitle" type="button" onClick={openSubtitleModal}>
           字幕
         </button>
         <button
           className="btn-secondary btn-merge"
           type="button"
-          onClick={() => toast.info('結合機能は現在準備中です。')}
+          onClick={!videoMergeState.loading ? handleMerge : null}
+          disabled={videoMergeState.loading}
         >
-          結合
+          {videoMergeState.loading ? '結合中...' : '結合'}
         </button>
         <button
           className={`btn-gradient ${isSuccess ? 'btn-uploaded' : 'btn-post'}`}
@@ -97,30 +108,14 @@ const BlockVideo = ({ thumbnail, name, date, videoId, isUploaded, onClick }) => 
         </button>
       </div>
 
-      {/* Subtitle Modal
-      <Modal
-        isOpen={isSubtitleModalOpen}
-        onRequestClose={() => setIsSubtitleModalOpen(false)}
-        contentLabel="Edit Subtitle"
-        className="modalVideo-content"
-        overlayClassName="modalVideo-overlay"
-      >
-        <h2>字幕を編集</h2>
-        <textarea
-          value={subtitleContent}
-          onChange={(e) => setSubtitleContent(e.target.value)}
-          rows={15}
-          style={{ width: '100%', padding: '10px', fontSize: '16px', fontFamily: 'monospace' }}
-        />
-        <div style={{ marginTop: '15px', textAlign: 'right' }}>
-          <button className="btn-cancel" onClick={() => setIsSubtitleModalOpen(false)}>
-            キャンセル
-          </button>
-          <button className="btn-confirm" onClick={saveSubtitle}>
-            保存
-          </button>
-        </div>
-      </Modal> */}
+      <SubtitleEditorModal
+        isOpen={isModalOpen}
+        onClose={closeSubtitleModal}
+        subtitle={editedSubtitle}
+        onSubtitleChange={setEditedSubtitle}
+        onSave={handleSaveSubtitle}
+        isLoading={subtitleLoading}
+      />
     </div>
   );
 };

@@ -53,25 +53,21 @@ const generateVideo = async (req, res) => {
   }
 
   try {
-    // Get title from textScriptId
-    const textScriptDetails = await TextScriptService.getTextScriptById(textScriptId);
-    const title = textScriptDetails?.title || 'Default Title';
+    // console.log('Requesting video generation...');
+    // const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type);
 
-    console.log('Requesting video generation...');
-    const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type);
-
-    if (videoData.status !== 'created') {
-      return res.status(400).json({
-        success: false,
-        message: 'Video generation did not start properly',
-        data: null,
-      });
-    }
+    // if (videoData.status !== 'created') {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Video generation did not start properly',
+    //     data: null,
+    //   });
+    // }
 
     console.log('Polling for video readiness...');
-    const videoId = 'tlk_vljZHaOLyyQYe3iwhQUyK';
-    const videoDetails = await pollVideoStatus(videoData.id);
-    // const videoDetails = await pollVideoStatus(videoId);
+    const videoId = 'tlk_4VfcM3E0L4Xx_j85BNrPB';
+    // const videoDetails = await pollVideoStatus(videoData.id);
+    const videoDetails = await pollVideoStatus(videoId);
 
     if (!videoDetails || videoDetails.status !== 'done') {
       return res.status(400).json({
@@ -82,25 +78,27 @@ const generateVideo = async (req, res) => {
     }
 
     console.log('Downloading video and subtitles...');
-    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
-    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
+    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
+    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
+    console.log('test', videoPath, subtitlesPath);
 
     console.log('Processing subtitles for line breaking...');
     await processSrtFile(subtitlesPath, subtitlesPath, 15);
 
-    console.log('Merging subtitles into video...');
-    const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoData.id}.mp4`);
+    // console.log('Merging subtitles into video...');
+    // const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoData.id}.mp4`);
     // const mergedVideoPath = path.resolve(path.dirname(videoPath), `merged_${videoId}.mp4`);
-    await mergeSubtitlesIntoVideo(videoPath, subtitlesPath, mergedVideoPath, title);
+    // await mergeSubtitlesIntoVideo(videoPath, subtitlesPath, mergedVideoPath, title);
 
     console.log('Saving video details to database...');
     const newVideo = await VideoService.createVideo({
       user_id,
       script_id: textScriptId,
-      video_url: `/public/video/merged_${videoData.id}.mp4`,
-      srt_file_url: `/public/video/${videoData.id}.srt`,
-      // video_url: `/public/video/merged_${videoId}.mp4`,
-      // srt_file_url: `/public/video/${videoId}.srt`,
+      // video_url: `/public/video/merged_${videoData.id}.mp4`,
+      // video_url: `/public/video/${videoData.id}.mp4`,
+      // srt_file_url: `/public/video/${videoData.id}.srt`,
+      video_url: `/public/video/${videoId}.mp4`,
+      srt_file_url: `/public/video/${videoId}.srt`,
       duration: videoDetails.duration,
       image_url: avatarUrl,
     });
@@ -109,8 +107,8 @@ const generateVideo = async (req, res) => {
       success: true,
       message: 'AI Video generated, downloaded, and saved successfully',
       data: {
-        videoId: videoData.id,
-        // videoId: videoId,
+        // videoId: videoData.id,
+        videoId: videoId,
         videoPath,
         subtitlesPath,
         newVideo,
@@ -224,22 +222,89 @@ const retryDownloadFile = async (url, outputPath) => {
   }
 };
 
-// Merge subtitles into video using FFmpeg
-const mergeSubtitlesIntoVideo = async (videoPath, srtPath, outputPath, title) => {
-  // const formattedTitle = splitLongText(title, 10).replace(/\n/g, '\\\\n').replace(/'/g, "\\'");
-  // console.log(formattedTitle);
+const adjustPaths = (inputPaths) => {
+  return path.join('/app', inputPaths);
+};
 
-  return new Promise((resolve, reject) => {
-    ffmpeg(videoPath)
-      .videoFilter([
-        `subtitles=${srtPath}:force_style='FontName=Noto Sans JP,Fontsize=14,Alignment=2,MarginV=50'`,
-        `drawtext=text='${title}':box=1:boxcolor=black@0.5:boxborderw=10:fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50:fontfile=${fontPath}`,
-      ])
-      .output(outputPath)
-      .on('end', () => resolve(outputPath))
-      .on('error', (err) => reject(err))
-      .run();
-  });
+const transformPath = (originalPath) => {
+  return originalPath.replace(/(\/public\/video\/)(.*)/, '$1merged_$2');
+};
+
+// Merge subtitles into video using FFmpeg
+const mergeSubtitlesIntoVideo = async (req, res) => {
+  const { videoId } = req.params;
+
+  if (!videoId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required field: videoId',
+      data: null,
+    });
+  }
+
+  const { videoPath, srtPath, textScriptId } = req.body;
+
+  if (!videoPath || !srtPath || !textScriptId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required fields: videoPath, srtPath, textScriptId',
+      data: null,
+    });
+  }
+
+  try {
+    const updatedVideoPath = adjustPaths(videoPath);
+    const updatedSrtPath = adjustPaths(srtPath);
+
+    const textScriptDetails = await TextScriptService.getTextScriptById(textScriptId);
+    const title = textScriptDetails?.title || 'Default Title';
+
+    // const outputPath = path.resolve(path.dirname(updatedVideoPath), `merged_${id}.mp4`);
+    const outputPath = transformPath(updatedVideoPath);
+
+    console.log(outputPath);
+
+    debugger;
+
+    await new Promise((resolve, reject) => {
+      ffmpeg(updatedVideoPath)
+        .videoFilter([
+          `subtitles=${updatedSrtPath}:force_style='FontName=Noto Sans JP,Fontsize=14,Alignment=2,MarginV=50'`,
+          `drawtext=text='${title}':box=1:boxcolor=black@0.5:boxborderw=10:fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50:fontfile=${fontPath}`,
+        ])
+        .output(outputPath)
+        .on('end', () => {
+          console.log(`Merged video saved to: ${outputPath}`);
+          resolve(outputPath);
+        })
+        .on('error', (err) => {
+          console.error('Error merging subtitles into video:', err.message);
+          reject(err);
+        })
+        .run();
+    });
+
+    const videoURL = outputPath.replace(/^\/app/, '');
+
+    await VideoService.updateVideo(videoId, { video_url: videoURL });
+    console.log(`Video URL updated successfully for videoId: ${videoId}`);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Subtitles merged into video and video URL updated successfully',
+      data: {
+        videoId,
+        video_url: videoURL,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Error during merging subtitles and updating video URL',
+      error: error.message,
+      data: null,
+    });
+  }
 };
 
 // Save video and subtitles files
@@ -293,4 +358,5 @@ module.exports = {
   generateText,
   generateVideo,
   getGeneratedVideo,
+  mergeSubtitlesIntoVideo,
 };

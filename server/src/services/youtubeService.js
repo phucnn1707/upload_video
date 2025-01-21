@@ -34,7 +34,7 @@ exports.uploadVideoById = async (userId, videoId) => {
     };
 
     const linkedAccount = await LinkedAccount.findOne({
-      where: { user_id: userId, platform: 'Youtube' },
+      where: { user_id: userId, platform: 'Youtube', active: true },
     });
 
     if (!linkedAccount || !linkedAccount.refresh_token) {
