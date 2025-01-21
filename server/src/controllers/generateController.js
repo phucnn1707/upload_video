@@ -53,21 +53,21 @@ const generateVideo = async (req, res) => {
   }
 
   try {
-    // console.log('Requesting video generation...');
-    // const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type);
+    console.log('Requesting video generation...');
+    const videoData = await VideoGenerationService.generateVideoFromTextScript(textScriptId, avatarUrl, voice_id, type);
 
-    // if (videoData.status !== 'created') {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'Video generation did not start properly',
-    //     data: null,
-    //   });
-    // }
+    if (videoData.status !== 'created') {
+      return res.status(400).json({
+        success: false,
+        message: 'Video generation did not start properly',
+        data: null,
+      });
+    }
 
     console.log('Polling for video readiness...');
     const videoId = 'tlk_4VfcM3E0L4Xx_j85BNrPB';
-    // const videoDetails = await pollVideoStatus(videoData.id);
-    const videoDetails = await pollVideoStatus(videoId);
+    const videoDetails = await pollVideoStatus(videoData.id);
+    // const videoDetails = await pollVideoStatus(videoId);
 
     if (!videoDetails || videoDetails.status !== 'done') {
       return res.status(400).json({
@@ -78,8 +78,8 @@ const generateVideo = async (req, res) => {
     }
 
     console.log('Downloading video and subtitles...');
-    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
-    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
+    const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoData.id);
+    // const { videoPath, subtitlesPath } = await saveVideoFiles(videoDetails, videoId);
     console.log('test', videoPath, subtitlesPath);
 
     console.log('Processing subtitles for line breaking...');
@@ -95,10 +95,10 @@ const generateVideo = async (req, res) => {
       user_id,
       script_id: textScriptId,
       // video_url: `/public/video/merged_${videoData.id}.mp4`,
-      // video_url: `/public/video/${videoData.id}.mp4`,
-      // srt_file_url: `/public/video/${videoData.id}.srt`,
-      video_url: `/public/video/${videoId}.mp4`,
-      srt_file_url: `/public/video/${videoId}.srt`,
+      video_url: `/public/video/${videoData.id}.mp4`,
+      srt_file_url: `/public/video/${videoData.id}.srt`,
+      // video_url: `/public/video/${videoId}.mp4`,
+      // srt_file_url: `/public/video/${videoId}.srt`,
       duration: videoDetails.duration,
       image_url: avatarUrl,
     });
@@ -107,8 +107,8 @@ const generateVideo = async (req, res) => {
       success: true,
       message: 'AI Video generated, downloaded, and saved successfully',
       data: {
-        // videoId: videoData.id,
-        videoId: videoId,
+        videoId: videoData.id,
+        // videoId: videoId,
         videoPath,
         subtitlesPath,
         newVideo,
