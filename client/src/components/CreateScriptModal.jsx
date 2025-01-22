@@ -79,9 +79,9 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
             <div className="mb-4">
               <label className="col-form-label">希望する内容</label>
               <div className="position-relative">
-                <input
+                <textarea
                   className="form-control"
-                  type="text"
+                  rows="2"
                   maxLength="100"
                   value={desiredContent}
                   onChange={(e) => setDesiredContent(e.target.value.slice(0, 100))}
@@ -92,8 +92,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                   className="text-muted position-absolute"
                   style={{
                     right: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
+                    bottom: '10px',
                     pointerEvents: 'none',
                   }}
                 >
