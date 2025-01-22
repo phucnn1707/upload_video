@@ -10,9 +10,17 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
 
   const [desiredContent, setDesiredContent] = useState('');
   const [characterLimit, setCharacterLimit] = useState('');
+  const [desiredTitle, setDesiredTitle] = useState('');
+  const [titleError, setTitleError] = useState(false);
 
   const handleGenerateScript = async () => {
+    if (!desiredTitle.trim()) {
+      setTitleError(true);
+      return;
+    }
+
     const options = {
+      desiredTitle: desiredTitle.trim() === '' ? '' : desiredTitle,
       desiredContent: desiredContent.trim() === '' ? '' : desiredContent,
       characterLimit: characterLimit.trim() === '' ? '' : parseInt(characterLimit, 10),
     };
@@ -36,6 +44,37 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
             <div className="mb-4">
               <label className="col-form-label">キーワード</label>
               <input className="form-control" type="text" value={block.keyword} readOnly />
+            </div>
+            <div className="mb-4">
+              <label className="col-form-label">
+                希望するタイトル <span className="text-danger">*</span>
+              </label>
+              <div className="position-relative">
+                <input
+                  className="form-control"
+                  type="text"
+                  maxLength="50"
+                  value={desiredTitle}
+                  onChange={(e) => {
+                    setDesiredTitle(e.target.value.slice(0, 15));
+                    setTitleError(false);
+                  }}
+                  placeholder="希望するタイトルを入力してください (任意)"
+                  style={{ paddingRight: '80px' }}
+                />
+                <span
+                  className="text-muted position-absolute"
+                  style={{
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  {desiredTitle.length}/15
+                </span>
+              </div>
+              {titleError && <p className="text-danger mt-2">タイトルは必須です。</p>}
             </div>
             <div className="mb-4">
               <label className="col-form-label">希望する内容</label>
