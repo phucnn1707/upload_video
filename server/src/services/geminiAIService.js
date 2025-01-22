@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
 /**
  * Generate text based on a keyword with optional customization.
@@ -15,12 +15,12 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 async function generateTextFromKeyword(keyword, options = {}) {
   if (!keyword) throw new Error('Keyword is required.');
 
-  const { desiredContent, characterLimit } = options;
+  const { desiredTitle, desiredContent, characterLimit } = options;
   const maxRetries = 3;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const inputPrompt = createInputPrompt(keyword, desiredContent, characterLimit);
+      const inputPrompt = createInputPrompt(keyword, desiredContent, characterLimit, desiredTitle);
       console.log(`Generated Prompt (Attempt ${attempt}):`, inputPrompt);
 
       const result = await model.generateContent(inputPrompt);
@@ -44,7 +44,7 @@ async function generateTextFromKeyword(keyword, options = {}) {
  * @param {number} temp - Additional parameter (unused, included for extensibility).
  * @returns {string} - Generated input prompt.
  */
-function createInputPrompt(keyword, userDescription, temp) {
+function createInputPrompt(keyword, userDescription, characterLimit, desiredTitle) {
   const defaultInstruction = `
     Write a creative, engaging, and dynamic script that resonates with a Japanese audience. 
     Focus on delivering a memorable and impactful message about the keyword: "${keyword}".
@@ -52,15 +52,19 @@ function createInputPrompt(keyword, userDescription, temp) {
 
   const instruction = userDescription?.trim() || defaultInstruction;
 
+  const title = desiredTitle?.trim() || `An engaging script about "${keyword}"`;
+
   return `
     Act like a professional scriptwriter with expertise in creating captivating Japanese scripts for diverse audiences.
     Your goal is to create an engaging and dynamic script for the keyword: "${keyword}".
+
+    Title: "${title}"
 
     User's Custom Instructions:
     - ${instruction}
 
     Requirements:
-    1. Start with a short and captivating title in Japanese that immediately grabs attention.
+    1. Use the title "${title}" at the beginning of the script.
     2. Follow the title with "---" and write a single, cohesive paragraph:
        - Use a conversational tone and include elements that resonate with the audience.
        - Ensure the output aligns with the user's description provided above.

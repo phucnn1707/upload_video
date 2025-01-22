@@ -270,7 +270,8 @@ const mergeSubtitlesIntoVideo = async (req, res) => {
       ffmpeg(updatedVideoPath)
         .videoFilter([
           `subtitles=${updatedSrtPath}:force_style='FontName=Noto Sans JP,Fontsize=14,Alignment=2,MarginV=50'`,
-          `drawtext=text='${title}':box=1:boxcolor=black@0.5:boxborderw=10:fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50:fontfile=${fontPath}`,
+          // `drawtext=text='${title}':box=1:boxcolor=black@0.5:boxborderw=10:fontcolor=white:fontsize=30:x=(w-text_w)/2:y=50:fontfile=${fontPath}`,
+          `drawtext=text='${title}':fontfile=${fontPath}:fontcolor=white:fontsize=48:borderw=3:bordercolor=black:box=1:boxcolor=black@0.5:boxborderw=10:x=(w-text_w)/2:y=50`,
         ])
         .output(outputPath)
         .on('end', () => {
