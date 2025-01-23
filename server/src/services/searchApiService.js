@@ -2,6 +2,7 @@
 const axios = require('axios');
 const db = require('../models');
 const { Keyword } = db;
+const { Op } = require('sequelize');
 
 const API_KEY = process.env.SEARCH_API_KEY;
 const SEARCH_API_URL = process.env.SEARCH_API_URL;
@@ -34,8 +35,31 @@ const getYouTubeTrendingKeywords = (data) => {
   return trendingKeywords;
 };
 
+const deleteOldKeywords = async () => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 3);
+  console.log(`Deleting old keywords before ${cutoffDate.toISOString().slice(0, 10)}`);
+
+  try {
+    await Keyword.destroy({
+      where: {
+        trending_date: {
+          [Op.lt]: cutoffDate,
+        },
+      },
+    });
+    console.log('Old keywords deleted successfully!');
+  } catch (error) {
+    console.error('Error deleting old keywords:', error);
+  }
+};
+
 const createKeywords = async (keywords, platform) => {
-  console.log('trending_date', date);
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+
+  await deleteOldKeywords();
+
   const keywordEntries = keywords.map((keyword) => ({
     platform,
     keyword: keyword.replace(/\s+/g, ''),

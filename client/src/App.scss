@@ -2158,15 +2158,32 @@ a.button.btn-youtube::after {
   }
 }
 
+/* Style for the trend-note */
+.trend-note {
+  font-size: 14px; /* Adjust font size */
+  color: #c6c6c6; /* Light gray for subtle effect */
+  margin-left: 10px; /* Add spacing from the main title */
+  font-weight: 400; /* Regular font weight */
+  vertical-align: middle; /* Align text properly */
+}
+
+/* Ensure the layout remains responsive */
 .blockHead .tit {
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adds space between elements */
+  font-size: 24px; /* Main title size */
   font-weight: 600;
-  word-break: keep-all;
 }
 
 @media all and (max-width: 960px) {
   .blockHead .tit {
-    font-size: 20px;
+    font-size: 20px; /* Adjust font size for smaller screens */
+  }
+
+  .trend-note {
+    font-size: 12px; /* Adjust note size for smaller screens */
+    margin-left: 5px;
   }
 }
 
@@ -3787,7 +3804,7 @@ input[type='number'] {
 
 .blockVideo .btn-secondary {
   max-width: 70px;
-  padding: 8px 16px;
+  padding: 8px;
   font-size: 14px;
   background-color: #f0f0f0;
   border-radius: 100px;

@@ -18,7 +18,7 @@ const Create = () => {
     dispatch(fetchAvatars());
   }, [dispatch]);
 
-  const filteredScripts = textScripts.filter((script) => {
+  const filteredScripts = (textScripts || []).filter((script) => {
     if (!filterDate) return true;
 
     const scriptDate = new Date(script.createdAt);
