@@ -88,7 +88,7 @@ const BlockVideo = ({
       <div className="date">{date}</div>
       <div className="button-group">
         <button className="btn-secondary btn-subtitle" type="button" onClick={openSubtitleModal}>
-          字幕
+          読上げ
         </button>
         <button
           className="btn-secondary btn-merge"

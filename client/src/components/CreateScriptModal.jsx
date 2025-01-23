@@ -84,7 +84,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                   rows="2"
                   maxLength="100"
                   value={desiredContent}
-                  onChange={(e) => setDesiredContent(e.target.value.slice(0, 100))}
+                  onChange={(e) => setDesiredContent(e.target.value.slice(0, 200))}
                   placeholder="希望する内容を入力してください (任意)"
                   style={{ paddingRight: '80px' }}
                 />
@@ -96,7 +96,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                     pointerEvents: 'none',
                   }}
                 >
-                  {desiredContent.length}/100
+                  {desiredContent.length}/200
                 </span>
               </div>
             </div>

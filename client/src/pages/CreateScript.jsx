@@ -13,8 +13,16 @@ const CreateScript = () => {
   const [selectedTrend, setSelectedTrend] = useState(null);
 
   useEffect(() => {
-    dispatch(getTrend());
-    dispatch(fetchTrends());
+    const fetchData = async () => {
+      try {
+        await dispatch(getTrend());
+        dispatch(fetchTrends());
+      } catch (err) {
+        console.error('Error fetching trends:', err);
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
 
   const handleTrendClick = (trend) => {
@@ -32,7 +40,10 @@ const CreateScript = () => {
     <>
       <div className="container">
         <div className="blockHead blockFilter">
-          <div className="tit">現在トレンドのキーワード</div>
+          <div class="tit">
+            現在トレンドのキーワード
+            <span class="trend-note">※直近3日間</span>
+          </div>
         </div>
         <TrendList trends={trends} onTrendClick={handleTrendClick} />
       </div>
