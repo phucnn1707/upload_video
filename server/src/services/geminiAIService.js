@@ -27,7 +27,8 @@ async function generateTextFromKeyword(keyword, options = {}) {
       const content = result.response?.text() || '';
       console.log(`AI Response (Attempt ${attempt}):`, content);
 
-      return parseGeneratedContent(content);
+      return { generatedTitle: desiredTitle, generatedText: content };
+      // return parseGeneratedContent(content);
     } catch (error) {
       console.warn(`Attempt ${attempt} failed: ${error.message}`);
       if (attempt === maxRetries) {
@@ -55,27 +56,33 @@ function createInputPrompt(keyword, userDescription, characterLimit, desiredTitl
   const title = desiredTitle?.trim() || `An engaging script about "${keyword}"`;
 
   return `
-    Act like a professional scriptwriter with expertise in creating captivating Japanese scripts for diverse audiences.
-    Your goal is to create an engaging and dynamic script for the keyword: "${keyword}".
+Act like a professional Japanese content writer and editor. You specialize in crafting engaging, culturally relevant, and grammatically impeccable content in Japanese, tailored to diverse audiences and industries. You have extensive experience in writing articles optimized for various formats and requirements, including blogs, magazines, and SEO-driven content.
 
-    Title: "${title}"
+Objective: Write a professional, engaging, and captivating article in Japanese based on the provided keyword: "${keyword}". Follow any specific instructions, such as "${instruction}", with precision. Ensure the tone and style align with the intended audience, purpose, or platform.
 
-    User's Custom Instructions:
-    - ${instruction}
+Detailed Requirements:
+1. Character Count Compliance:
+   - For an exact character count, ensure the article matches the specified number exactly, including spaces and punctuation.
+   - If a maximum character limit is given, strictly adhere to this limit and avoid exceeding it.
+   - For a character range, maintain the article's length within the specified boundaries.
+   - When a minimum character count is required, ensure the content meets or exceeds this threshold.
 
-    Requirements:
-    1. Use the title "${title}" at the beginning of the script.
-    2. Follow the title with "---" and Follow the title with "---" and construct paragraphs while thinking about their meaning. Be sure to also use appropriate line breaks.
-       - Use a conversational tone and include elements that resonate with the audience.
-       - Ensure the output aligns with the user's description provided above.
+2. Content Expectations:
+   - Ensure the article is concise, well-structured, and free from unnecessary words to meet the specified character requirements.
+   - Craft engaging openings, informative body sections, and compelling conclusions.
+   - Adapt tone and style based on the purpose (e.g., formal, casual, or persuasive) and target audience.
+   - Where contextually appropriate, incorporate relevant details or enhancements for reader engagement.
+   - Ensure that all paragraphs are directly connected with no blank lines or extra spaces between them. Use a newline character ('\n') immediately after each paragraph to separate them.
 
-    Writing Guidelines:
-    - Use clear, impactful, and easy-to-understand language.
-    - Avoid unnecessary complexity while ensuring emotional and intellectual depth.
-    - Make the content memorable and leave a strong impression.
+3. Output Specifics:
+   - Provide only the article text without any extraneous notes or instructions.
+   - Maintain a focus on clarity and flow, with an emphasis on keyword integration if needed.
+   - Ensure paragraphs are separated by a single newline character ('\n') only, and there are no blank lines between them.
 
-    Output Format:
-    - Use appropriate line breaks based on the meaning of the sentence.
+4. Editing for Precision: After completing the draft, review and refine it to ensure it aligns with the given instructions and meets all requirements effectively.
+
+Final Note: Take a deep breath and approach this task step-by-step, ensuring each requirement is fulfilled with meticulous attention to detail.
+
   `.trim();
 }
 

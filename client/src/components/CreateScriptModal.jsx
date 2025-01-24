@@ -53,7 +53,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                 <input
                   className="form-control"
                   type="text"
-                  maxLength="50"
+                  maxLength="15"
                   value={desiredTitle}
                   onChange={(e) => {
                     setDesiredTitle(e.target.value.slice(0, 15));
@@ -82,7 +82,7 @@ const GenerateScriptModal = ({ block, onClose, onProceed }) => {
                 <textarea
                   className="form-control"
                   rows="2"
-                  maxLength="100"
+                  maxLength="200"
                   value={desiredContent}
                   onChange={(e) => setDesiredContent(e.target.value.slice(0, 200))}
                   placeholder="希望する内容を入力してください (任意)"
