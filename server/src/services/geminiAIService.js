@@ -65,7 +65,7 @@ function createInputPrompt(keyword, userDescription, characterLimit, desiredTitl
 
     Requirements:
     1. Use the title "${title}" at the beginning of the script.
-    2. Follow the title with "---" and write a single, cohesive paragraph:
+    2. Follow the title with "---" and Follow the title with "---" and construct paragraphs while thinking about their meaning. Be sure to also use appropriate line breaks.
        - Use a conversational tone and include elements that resonate with the audience.
        - Ensure the output aligns with the user's description provided above.
 
@@ -75,7 +75,7 @@ function createInputPrompt(keyword, userDescription, characterLimit, desiredTitl
     - Make the content memorable and leave a strong impression.
 
     Output Format:
-    - Return the result as a single cohesive paragraph with no line breaks or unnecessary formatting.
+    - Use appropriate line breaks based on the meaning of the sentence.
   `.trim();
 }
 
@@ -89,11 +89,9 @@ function parseGeneratedContent(content) {
     throw new Error('Generated content does not include a valid title and text separator ("---").');
   }
 
-  const [generatedTitle, generatedText] = content.split('---').map((part) =>
-    part
-      .trim()
-      .replace(/^["'“”‘’]|["'“”‘’]$/g, '')
-      .replace(/\r?\n|\r/g, '')
+  const [generatedTitle, generatedText] = content.split('---').map(
+    (part) => part.trim().replace(/^["'“”‘’]|["'“”‘’]$/g, '')
+    // .replace(/\r?\n|\r/g, '')
   );
 
   if (!generatedTitle || !generatedText) {
